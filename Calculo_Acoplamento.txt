@@ -1,0 +1,23 @@
+Student
+Eferente: 3
+Aferente: 2
+
+Professor
+Eferente:3
+Aferente:2
+
+Guest
+Eferente:1
+Aferente:1
+
+Event
+Eferente:1
+Aferente:1
+
+Department
+Eferente:3
+Aferente:0
+
+Academic Group
+Eferente:3
+Aferente:1
