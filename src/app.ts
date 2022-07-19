@@ -1,5 +1,7 @@
 import express, { Express } from 'express';
 import { AcademicGroupController } from './academic-groups/academic-groups.controller';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app: Express = express();
 
