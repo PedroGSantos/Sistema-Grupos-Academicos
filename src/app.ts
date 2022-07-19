@@ -13,4 +13,4 @@ app.use('/', (req, res) => {
     return res.status(200).send(academicGroupController.create());
 });
 
-app.listen(3000);
+app.listen(process.env.PORT);
