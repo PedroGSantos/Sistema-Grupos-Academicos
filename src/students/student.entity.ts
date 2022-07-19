@@ -5,6 +5,6 @@ export class Student extends User {
     ra!: number;
 
     department!: Department;
-    
+
     library_pendencies!: boolean;
 }

@@ -13,7 +13,7 @@ export class AcademicGroup {
     department!: Department;
 
     responsible!: User;
-    
+
     participants!: User[];
 
     participants_limit!: number;
