@@ -7,7 +7,7 @@ export class User {
 
     email!: string;
 
-    birth_date!: string;
+    birth_date!: Date;
 
     password!: string;
 }

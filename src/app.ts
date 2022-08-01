@@ -1,15 +1,18 @@
 import express, { Express } from 'express';
+import { AcademicGroupController } from './academic-groups/academic-groups.controller';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app: Express = express();
 
-/** Parse the request */
+const academicGroupController = new AcademicGroupController();
+
 app.use(express.urlencoded({ extended: false }));
 
-/** Takes care of JSON data */
 app.use(express.json());
 
 app.use('/', (req, res) => {
-    return res.status(200).send('Gabrielzinho entrou fi');
+    return res.status(200).send(academicGroupController.create());
 });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
