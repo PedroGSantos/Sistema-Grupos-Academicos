@@ -3,7 +3,7 @@ import { Student } from '../students/student.entity';
 export class Phase {
     private id!: number;
     private name!: string;
-    private start_time!: Date;
+    private start_date!: Date;
     private end_date!: Date;
     private participants?: Student[];
     private approveds?: Student[];
@@ -24,12 +24,12 @@ export class Phase {
         this.name = name;
     }
 
-    public getStart_time(): Date {
-        return this.start_time;
+    public getStart_date(): Date {
+        return this.start_date;
     }
 
-    public setStart_time(start_time: Date): void {
-        this.start_time = start_time;
+    public setStart_date(start_date: Date): void {
+        this.start_date = start_date;
     }
 
     public getEnd_date(): Date {
@@ -56,9 +56,9 @@ export class Phase {
         this.approveds = approveds;
     }
 
-    constructor(name: string, start_time: Date, end_date: Date, participants: Student[], approveds: Student[]){
+    constructor(name: string, start_date: Date, end_date: Date, participants: Student[], approveds: Student[]){
         this.setName(name);
-        this.setStart_time(start_time);
+        this.setStart_date(start_date);
         this.setEnd_date(end_date);
         this.setParticipants(participants);
         this.setApproveds(approveds);
