@@ -3,8 +3,8 @@ import { Student } from '../students/student.entity';
 export class Phase {
     private id!: number;
     private name!: string;
-    private start_date!: Date;
-    private end_date!: Date;
+    private startDate!: Date;
+    private endDate!: Date;
     private participants?: Student[];
     private approveds?: Student[];
 
@@ -24,23 +24,23 @@ export class Phase {
         this.name = name;
     }
 
-    public getStart_date(): Date {
-        return this.start_date;
+    public getStartDate(): Date {
+        return this.startDate;
     }
 
-    public setStart_date(start_date: Date): void {
-        this.start_date = start_date;
+    public setStartDate(start_date: Date): void {
+        this.startDate = start_date;
     }
 
-    public getEnd_date(): Date {
-        return this.end_date;
+    public getEndDate(): Date {
+        return this.endDate;
     }
 
-    public setEnd_date(end_date: Date): void {
-        this.end_date = end_date;
+    public setEndDate(endDate: Date): void {
+        this.endDate = endDate;
     }
 
-    public getParticipants(): Student[] {
+    public getParticipants(): Student[] | undefined {
         return this.participants;
     }
 
@@ -48,7 +48,7 @@ export class Phase {
         this.participants = participants;
     }
 
-    public getApproveds(): Student[] {
+    public getApproveds(): Student[] | undefined {
         return this.approveds;
     }
 
@@ -56,10 +56,10 @@ export class Phase {
         this.approveds = approveds;
     }
 
-    constructor(name: string, start_date: Date, end_date: Date, participants: Student[], approveds: Student[]){
+    constructor(name: string, startDate: Date, endDate: Date, participants: Student[], approveds: Student[]){
         this.setName(name);
-        this.setStart_date(start_date);
-        this.setEnd_date(end_date);
+        this.setStartDate(startDate);
+        this.setEndDate(endDate);
         this.setParticipants(participants);
         this.setApproveds(approveds);
     }

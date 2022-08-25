@@ -6,7 +6,7 @@ export class Student extends User {
 
     private department!: Department;
 
-    private library_pendencies!: boolean;
+    private libraryPendencies!: boolean;
 
     public getRA(): number{
         return this.ra;
@@ -18,7 +18,7 @@ export class Student extends User {
 
     public getLibraryPendencies(): boolean{
         //Aqui será necessário integrar com o outro sistema, o de biblioteca
-        return this.library_pendencies
+        return this.libraryPendencies
     }
 
     public setRA(ra:number): void{
@@ -26,20 +26,20 @@ export class Student extends User {
         this.ra = ra;
     }
 
-    public setDepartment(dep: Department): void{
-        this.department = dep;
+    public setDepartment(department: Department): void{
+        this.department = department;
     }
 
-    public setLibraryPendencies(library_pendencies: boolean): void{
-        this.library_pendencies = library_pendencies;
+    public setLibraryPendencies(libraryPendencies: boolean): void{
+        this.libraryPendencies = libraryPendencies;
     }
 
-    constructor(id:number, name:string, cpf:string, email:string, birth_date: Date, password: string, ra:number,dep:Department,library_pendencies: boolean){
+    constructor(id:number, name:string, cpf:string, email:string, birthDate: Date, password: string, ra:number,department:Department,libraryPendencies: boolean){
 
-        super(id, name, cpf, email, birth_date, password); //Perguntar pro taviola por que precisa disso
+        super(id, name, cpf, email, birthDate, password);
         this.setRA(ra);
-        this.setDepartment(dep);
-        this.setLibraryPendencies(library_pendencies);
+        this.setDepartment(department);
+        this.setLibraryPendencies(libraryPendencies);
     }
     
 }

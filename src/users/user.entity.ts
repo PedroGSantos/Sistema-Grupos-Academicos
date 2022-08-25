@@ -7,7 +7,7 @@ export class User {
 
     private email!: string;
 
-    private birth_date!: Date;
+    private birthDate!: Date;
 
     private password!: string;
 
@@ -28,7 +28,7 @@ export class User {
     }
 
     public getBirthDate():Date{
-        return this.birth_date;
+        return this.birthDate;
     }
 
     //Deve ter um método público?
@@ -52,21 +52,21 @@ export class User {
         this.email = email;
     }
 
-    public setBirthDate(birth_date:Date):void{
-        this.birth_date = birth_date;
+    public setBirthDate(birthDate:Date):void{
+        this.birthDate = birthDate;
     }
 
     public setPassword(password:string): void{
         this.password = password;
     }
 
-    constructor(id:number, name:string, cpf:string, email:string, birth_date: Date, password: string){
+    constructor(id:number, name:string, cpf:string, email:string, birthDate: Date, password: string){
 
         this.setId(id);
         this.setName(name);
         this.setCPF(cpf);
         this.setEmail(email);
-        this.setBirthDate(birth_date);
+        this.setBirthDate(birthDate);
         this.setPassword(password);
     }
 
