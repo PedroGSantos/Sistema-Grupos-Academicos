@@ -9,9 +9,9 @@ export class AcademicGroup {
     private department!: Department;
     private responsible!: User;
     private participants!: User[];
-    private participants_limit!: number;
+    private participantsLimit!: number;
     private events!: Event[];
-    private created_at!: Date;
+    private createdAt!: Date;
 
     public getId(): number {
         return this.id;
@@ -69,12 +69,12 @@ export class AcademicGroup {
         this.participants = participants;
     }
 
-    public getParticipants_limit(): number {
-        return this.participants_limit;
+    public getParticipantsLimit(): number {
+        return this.participantsLimit;
     }
 
-    public setParticipants_limit(participants_limit: number): void {
-        this.participants_limit = participants_limit;
+    public setParticipantsLimit(participantsLimit: number): void {
+        this.participantsLimit = participantsLimit;
     }
 
     public getEvents(): Event[] {
@@ -85,15 +85,15 @@ export class AcademicGroup {
         this.events = events;
     }
 
-    public getCreated_at(): Date {
-        return this.created_at;
+    public getCreatedAt(): Date {
+        return this.createdAt;
     }
 
-    public setCreated_at(created_at: Date): void {
-        this.created_at = created_at;
+    public setCreatedAt(createdAt: Date): void {
+        this.createdAt = createdAt;
     }
 
-    constructor(id: number, name: string, description: string, active: boolean, department: Department, responsible: User, participants: User[], participants_limit: number, events: Event[], created_at: Date){
+    constructor(id: number, name: string, description: string, active: boolean, department: Department, responsible: User, participants: User[], participantsLimit: number, events: Event[], createdAt: Date){
         this.setId(id);
         this.setName(name);
         this.setDescription(description);
@@ -101,8 +101,8 @@ export class AcademicGroup {
         this.setDepartment(department);
         this.setResponsible(responsible);
         this.setParticipants(participants);
-        this.setParticipants_limit(participants_limit);
+        this.setParticipantsLimit(participantsLimit);
         this.setEvents(events);
-        this.setCreated_at(created_at);
+        this.setCreatedAt(createdAt);
     }
 }

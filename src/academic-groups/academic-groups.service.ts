@@ -6,10 +6,10 @@ export class AcademicGroupService {
 
         newAcademicGroup.id = 1;
         newAcademicGroup.active = true;
-        newAcademicGroup.created_at = new Date();
+        newAcademicGroup.createdAt = new Date();
         newAcademicGroup.description = 'Super descrição';
         newAcademicGroup.name = 'Super nome';
-        newAcademicGroup.participants_limit = 1;
+        newAcademicGroup.participantsLimit = 1;
 
         return newAcademicGroup;
     }
