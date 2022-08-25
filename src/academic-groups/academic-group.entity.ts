@@ -2,7 +2,7 @@ import { User } from '../users/user.entity';
 import { Department } from '../departments/department.entity';
 
 export class AcademicGroup {
-    private id!: number;
+    private id!: string;
     private name!: string;
     private description!: string;
     private active!: boolean;
@@ -13,11 +13,11 @@ export class AcademicGroup {
     private events!: Event[];
     private createdAt!: Date;
 
-    public getId(): number {
+    public getId(): string {
         return this.id;
     }
 
-    public setId(id: number): void {
+    public setId(id: string): void {
         this.id = id;
     }
 
@@ -93,7 +93,18 @@ export class AcademicGroup {
         this.createdAt = createdAt;
     }
 
-    constructor(id: number, name: string, description: string, active: boolean, department: Department, responsible: User, participants: User[], participantsLimit: number, events: Event[], createdAt: Date){
+    constructor(
+        id: string,
+        name: string,
+        description: string,
+        active: boolean,
+        department: Department,
+        responsible: User,
+        participants: User[],
+        participantsLimit: number,
+        events: Event[],
+        createdAt: Date,
+    ) {
         this.setId(id);
         this.setName(name);
         this.setDescription(description);

@@ -1,17 +1,17 @@
 import { Phase } from '../phases/phase.entity';
 
 export class RecruitmentProcess {
-    private id!: number;
+    private id!: string;
     private date!: Date;
     private subscribersNumber!: number;
     private opportunitiesNumber!: number;
     private phases!: Phase[];
 
-    public getId(): number {
+    public getId(): string {
         return this.id;
     }
 
-    public setId(id: number): void {
+    public setId(id: string): void {
         this.id = id;
     }
 
@@ -47,7 +47,13 @@ export class RecruitmentProcess {
         this.phases = phases;
     }
 
-    constructor(id: number, date: Date, subscribersNumber: number, opportunitiesNumber: number, phases: Phase[]) {
+    constructor(
+        id: string,
+        date: Date,
+        subscribersNumber: number,
+        opportunitiesNumber: number,
+        phases: Phase[],
+    ) {
         this.setId(id);
         this.setDate(date);
         this.setSubscribersNumber(subscribersNumber);
