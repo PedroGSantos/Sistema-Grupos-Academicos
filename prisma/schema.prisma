@@ -23,6 +23,7 @@ model User {
   academicGroupHasUser AcademicGroupHasUser[]
   EventHasOrganizer    EventHasOrganizer[]
   EventHasGuest        EventHasGuest[]
+  AcademicGroup        AcademicGroup[]
 }
 
 model Department {
@@ -74,6 +75,7 @@ model AcademicGroup {
   department           Department             @relation(fields: [departmentId], references: [id])
   academicGroupHasUser AcademicGroupHasUser[]
   recruitmentProcess   RecruitmentProcess[]
+  responsible          User                   @relation(fields: [responsibleId], references: [id])
 }
 
 model AcademicGroupHasUser {
