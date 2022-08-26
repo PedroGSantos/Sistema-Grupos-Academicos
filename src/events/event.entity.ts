@@ -11,7 +11,6 @@ export class Event {
     private startDate!: Date;
     private endDate!: Date;
     private organizers!: Student[];
-    private status!: string;
     private address!: Localization;
     private guests!: User[];
     private currentState!: EventState;
