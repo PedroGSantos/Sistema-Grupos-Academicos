@@ -1,20 +1,27 @@
 import { User } from '../users/user.entity';
 import { Department } from '../departments/department.entity';
 import { Student } from '../students/student.entity';
-import { Professor } from '../professors/professor.entity';
+import { AcademicGroupState } from './state/academic-group-state.entity';
 
 export class AcademicGroup {
     private id!: string;
     private name!: string;
     private description!: string;
-    private active!: boolean;
     private department!: Department;
     private responsible!: User;
     private participants!: User[];
     private participantsLimit!: number;
     private events!: Event[];
     private createdAt!: Date;
+    private currentState!: AcademicGroupState;
 
+    public getAcademicGroupState(): AcademicGroupState {
+        return this.currentState;
+    }
+
+    public setAcademicGroupState(state: AcademicGroupState): void {
+        this.currentState = state;
+    }
     public getId(): string {
         return this.id;
     }
@@ -37,14 +44,6 @@ export class AcademicGroup {
 
     public setDescription(description: string): void {
         this.description = description;
-    }
-
-    public isActive(): boolean {
-        return this.active;
-    }
-
-    public setActive(active: boolean): void {
-        this.active = active;
     }
 
     public getDepartment(): Department {
@@ -102,28 +101,33 @@ export class AcademicGroup {
         id: string,
         name: string,
         description: string,
-        active: boolean,
         department: Department,
         responsible: User,
         participants: User[],
         participantsLimit: number,
         events: Event[],
         createdAt: Date,
+        currentState: AcademicGroupState,
     ) {
         this.setId(id);
         this.setName(name);
         this.setDescription(description);
-        this.setActive(active);
         this.setDepartment(department);
         this.setResponsible(responsible);
         this.setParticipants(participants);
         this.setParticipantsLimit(participantsLimit);
         this.setEvents(events);
         this.setCreatedAt(createdAt);
+        this.setAcademicGroupState(currentState);
     }
 
+    //O parâmetro disciplinesNumber irá mudar. Será necessário fazer uma requisição para os outros sistemas
     public addStudent(student: Student, disciplinesNumber: number): boolean {
-        if (student.getLibraryPendencies() || disciplinesNumber < 3) {
+        if (
+            student.getLibraryPendencies() ||
+            disciplinesNumber < 3 ||
+            !this.currentState.isActive()
+        ) {
             return false;
         }
 
@@ -132,7 +136,7 @@ export class AcademicGroup {
     }
 
     public changeResponsable(user: User): boolean {
-        if (user.getLibraryPendencies()) {
+        if (user.getLibraryPendencies() || !this.currentState.isActive()) {
             return false;
         }
 
@@ -141,14 +145,21 @@ export class AcademicGroup {
     }
 
     public removeStudent(aluno: Student): boolean {
+        if (!this.currentState.isActive()) {
+            return false;
+        }
         this.participants.filter((s) => s.getId() == aluno.getId());
         return true;
     }
 
     public disableAcademicGroup(user: User): boolean {
-        if (user.getId() == this.getResponsible().getId()) return false;
+        if (
+            user.getId() != this.getResponsible().getId() ||
+            !this.currentState.isActive()
+        )
+            return false;
 
-        this.active = false;
+        this.currentState.modifyStatusGroup(this);
         return true;
     }
 }
