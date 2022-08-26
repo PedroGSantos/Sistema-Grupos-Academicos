@@ -1,22 +1,21 @@
-import { UserState } from "./user-state.entity";
-import { User } from "./user.entity";
+import { UserState } from './user-state.entity';
+import { User } from './user.entity';
 
-export class Disconnected extends UserState{
+export class Disconnected extends UserState {
+    private static instance: Disconnected;
 
-    private disconnectedUniqueInstance: Disconnected;
-
-    private Disconnected(){
-        this.disconnectedUniqueInstance = new Disconnected;
+    private constructor() {
+        super();
     }
 
-    public getInstance(): Disconnected{
-        if(!this.disconnectedUniqueInstance){
-            this.disconnectedUniqueInstance = new Disconnected();
+    public static getInstance(): Disconnected {
+        if (!Disconnected.instance) {
+            Disconnected.instance = new Disconnected();
         }
-        return this.disconnectedUniqueInstance;
+        return Disconnected.instance;
     }
 
     public changeEnrollment(user: User): void {
-        user.setUserState(new Disconnected());
+        user.setUserState(Disconnected.getInstance());
     }
 }

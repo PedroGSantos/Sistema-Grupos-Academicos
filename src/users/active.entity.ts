@@ -1,22 +1,21 @@
-import { UserState } from "./user-state.entity";
-import { User } from "./user.entity";
+import { UserState } from './user-state.entity';
+import { User } from './user.entity';
 
-export class Active extends UserState{
+export class Active extends UserState {
+    private static instance: Active;
 
-    private activeUniqueInstance: Active;
-
-    private Active(){
-        this.activeUniqueInstance = new Active();
+    private constructor() {
+        super();
     }
 
-    public getInstance(): Active{
-        if(!this.activeUniqueInstance){
-            this.activeUniqueInstance = new Active();
+    public static getInstance(): Active {
+        if (!Active.instance) {
+            Active.instance = new Active();
         }
-        return this.activeUniqueInstance;
+        return Active.instance;
     }
 
     public changeEnrollment(user: User): void {
-        user.setUserState(new Active());
+        user.setUserState(Active.getInstance());
     }
 }

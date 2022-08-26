@@ -1,23 +1,21 @@
-import { UserState } from "./user-state.entity";
-import { User } from "./user.entity";
+import { UserState } from './user-state.entity';
+import { User } from './user.entity';
 
-export class Away extends UserState{
+export class Away extends UserState {
+    private static instance: Away;
 
-    private awayUniqueInstance: Away;
-
-    private Away(){
-        this.awayUniqueInstance = new Away;
+    private constructor() {
+        super();
     }
 
-    public getInstance(): Away{
-        if(!this.awayUniqueInstance){
-            this.awayUniqueInstance = new Away();
+    public static getInstance(): Away {
+        if (!Away.instance) {
+            Away.instance = new Away();
         }
-        return this.awayUniqueInstance;
+        return Away.instance;
     }
 
     public changeEnrollment(user: User): void {
-        user.setUserState(new Away());
+        user.setUserState(Away.getInstance());
     }
-
 }
