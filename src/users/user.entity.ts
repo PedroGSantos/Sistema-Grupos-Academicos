@@ -1,4 +1,4 @@
-export class User {
+export abstract class User {
     private id!: string;
 
     private name!: string;
@@ -11,56 +11,63 @@ export class User {
 
     private password!: string;
 
-    public getId(): string{
+    public getId(): string {
         return this.id;
     }
 
-    public getName(): string{
+    public getName(): string {
         return this.name;
     }
 
-    public getCPF():string{
+    public getCPF(): string {
         return this.cpf;
     }
 
-    public getEmail(): string{
+    public getEmail(): string {
         return this.email;
     }
 
-    public getBirthDate():Date{
+    public getBirthDate(): Date {
         return this.birthDate;
     }
 
     //Deve ter um método público?
-    public getPassword(): string{
+    public getPassword(): string {
         return this.password;
     }
 
-    public setId(id: string): void{
+    public setId(id: string): void {
         this.id = id;
     }
 
-    public setName(name: string):void{
+    public setName(name: string): void {
         this.name = name;
     }
 
-    public setCPF(cpf:string): void{
+    public setCPF(cpf: string): void {
         this.cpf = cpf;
     }
 
-    public setEmail(email:string):void{
+    public setEmail(email: string): void {
         this.email = email;
     }
 
-    public setBirthDate(birthDate:Date):void{
+    public setBirthDate(birthDate: Date): void {
         this.birthDate = birthDate;
     }
 
-    public setPassword(password:string): void{
+    public setPassword(password: string): void {
         this.password = password;
     }
 
-    constructor(id: string, name: string, cpf: string, email: string, birthDate: Date, password: string){
+    constructor(
+        id: string,
+        name: string,
+        cpf: string,
+        email: string,
+        birthDate: Date,
+        password: string,
+    ) {
         this.setId(id);
         this.setName(name);
         this.setCPF(cpf);
@@ -69,4 +76,5 @@ export class User {
         this.setPassword(password);
     }
 
+    abstract getLibraryPendencies(): boolean;
 }

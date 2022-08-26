@@ -18,7 +18,7 @@ export class Student extends User {
 
     public getLibraryPendencies(): boolean {
         //Aqui será necessário integrar com o outro sistema, o de biblioteca
-        return this.libraryPendencies
+        return this.libraryPendencies;
     }
 
     public setRA(ra: number): void {
