@@ -5,7 +5,7 @@ import { Finished } from './finished.entity';
 export class Happening extends EventState {
     private static instance: Happening;
 
-    private constructor() { 
+    private constructor() {
         super();
     }
 

@@ -56,14 +56,6 @@ export class Event {
         this.organizers = organizers;
     }
 
-    public getStatus(): string {
-        return this.status;
-    }
-
-    public setStatus(status: string): void {
-        this.status = status;
-    }
-
     public getAddress(): Localization {
         return this.address;
     }
@@ -115,7 +107,6 @@ export class Event {
         this.setStartDate(startDate);
         this.setEndDate(endDate);
         this.setOrganizers(organizers);
-        this.setStatus(status);
         this.setAddress(address);
         this.setGuests(guests);
         this.setCurrentState(currentState);

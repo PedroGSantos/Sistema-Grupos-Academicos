@@ -5,7 +5,7 @@ import { Happening } from './happening.entity';
 export class Scheduled extends EventState {
     private static instance: Scheduled;
 
-    private constructor() { 
+    private constructor() {
         super();
     }
 

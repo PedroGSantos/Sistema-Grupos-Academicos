@@ -4,7 +4,7 @@ import { EventState } from './eventState.entity';
 export class Cancelled extends EventState {
     private static instance: Cancelled;
 
-    private constructor() { 
+    private constructor() {
         super();
     }
 
