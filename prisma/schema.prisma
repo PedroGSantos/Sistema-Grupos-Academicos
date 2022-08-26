@@ -1,0 +1,167 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar(100)
+  cpf       String   @db.VarChar(11)
+  email     String   @db.Text
+  birthDate DateTime @db.Timestamptz(6)
+  password  String   @db.Text
+
+  student              Student[]
+  professor            Professor[]
+  academicGroupHasUser AcademicGroupHasUser[]
+  EventHasOrganizer    EventHasOrganizer[]
+  EventHasGuest        EventHasGuest[]
+}
+
+model Department {
+  id            String          @id @default(uuid()) @db.Uuid
+  name          String          @db.VarChar(30)
+  student       Student[]
+  professor     Professor[]
+  academicGroup AcademicGroup[]
+}
+
+model Student {
+  ra                Int               @id
+  userId            String            @db.Uuid
+  departmentId      String            @db.Uuid
+  libraryPendencies Boolean           @default(false)
+  phasesApplied     StudentsOnPhase[]
+
+  department Department @relation(fields: [departmentId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+}
+
+model Professor {
+  userId            String  @id @db.Uuid
+  departmentId      String  @db.Uuid
+  libraryPendencies Boolean @default(false)
+
+  department Department @relation(fields: [departmentId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+}
+
+model Localization {
+  id      String  @id @default(uuid()) @db.Uuid
+  city    String  @db.VarChar(40)
+  state   String  @db.VarChar(2)
+  country String  @db.VarChar(15)
+  number  String  @db.VarChar(40)
+  zip     String  @db.VarChar(15)
+  Event   Event[]
+}
+
+model AcademicGroup {
+  id            String  @id @default(uuid()) @db.Uuid
+  name          String  @db.VarChar(100)
+  description   String  @db.Text
+  active        Boolean @default(true)
+  departmentId  String  @db.Uuid
+  responsibleId String  @db.Uuid
+
+  department           Department             @relation(fields: [departmentId], references: [id])
+  academicGroupHasUser AcademicGroupHasUser[]
+  recruitmentProcess   RecruitmentProcess[]
+}
+
+model AcademicGroupHasUser {
+  id              String  @id @default(uuid()) @db.Uuid
+  userId          String  @db.Uuid
+  academicGroupId String  @db.Uuid
+  isResponsible   Boolean @default(false)
+
+  user          User          @relation(fields: [userId], references: [id])
+  academicGroup AcademicGroup @relation(fields: [academicGroupId], references: [id])
+}
+
+model RecruitmentProcess {
+  id                  String        @id @default(uuid()) @db.Uuid
+  startDate           DateTime      @db.Timestamptz(6)
+  endDate             DateTime      @db.Timestamptz(6)
+  subscribesNumber    Int           @default(0)
+  opportunitiesNumber Int           @default(0)
+  phases              Phase[]
+  academicGroup       AcademicGroup @relation(fields: [academicGroupId], references: [id])
+  academicGroupId     String        @db.Uuid
+}
+
+model Phase {
+  id                   String            @id @default(uuid()) @db.Uuid
+  name                 String            @db.VarChar(15)
+  startDate            DateTime          @db.Timestamptz(6)
+  endDate              DateTime          @db.Timestamptz(6)
+  participantsAtPhase  StudentsOnPhase[]
+  recruitmentProcessId String?           @db.Uuid
+
+  recruitmentProcess RecruitmentProcess? @relation(fields: [recruitmentProcessId], references: [id])
+}
+
+model StudentsOnPhase {
+  id String @id @default(uuid()) @db.Uuid
+
+  student   Student? @relation(fields: [studentRa], references: [ra])
+  studentRa Int?
+
+  phase   Phase?  @relation(fields: [phaseId], references: [id])
+  phaseId String? @db.Uuid
+
+  isApproved Boolean @default(false)
+}
+
+model Event {
+  id                    String                         @id @default(uuid()) @db.Uuid
+  name                  String                         @db.VarChar(50)
+  startDate             DateTime                       @db.Timestamptz(6)
+  endDate               DateTime                       @db.Timestamptz(6)
+  organizers            EventHasOrganizer[]
+  status                EventStatesEnum
+  addressId             String                         @db.Uuid
+  guests                EventHasGuest[]
+  invitedAcademicGroups EventHasInvitedAcademicGroup[]
+
+  address Localization @relation(fields: [addressId], references: [id])
+}
+
+enum EventStatesEnum {
+  scheduled
+  happening
+  finished
+  cancelled
+}
+
+model EventHasOrganizer {
+  id      String @id @default(uuid()) @db.Uuid
+  userId  String @db.Uuid
+  eventId String @db.Uuid
+
+  user  User  @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
+}
+
+model EventHasGuest {
+  id      String @id @default(uuid()) @db.Uuid
+  userId  String @db.Uuid
+  eventId String @db.Uuid
+
+  user  User  @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
+}
+
+model EventHasInvitedAcademicGroup {
+  id      String  @id @default(uuid()) @db.Uuid
+  eventId String? @db.Uuid
+
+  event Event? @relation(fields: [eventId], references: [id])
+}

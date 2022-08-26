@@ -93,7 +93,18 @@ export class AcademicGroup {
         this.createdAt = createdAt;
     }
 
-    constructor(id: number, name: string, description: string, active: boolean, department: Department, responsible: User, participants: User[], participantsLimit: number, events: Event[], createdAt: Date){
+    constructor(
+        id: number,
+        name: string,
+        description: string,
+        active: boolean,
+        department: Department,
+        responsible: User,
+        participants: User[],
+        participantsLimit: number,
+        events: Event[],
+        createdAt: Date,
+    ) {
         this.setId(id);
         this.setName(name);
         this.setDescription(description);
