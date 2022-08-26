@@ -3,6 +3,7 @@ import { Guest } from '../guests/guest.entity';
 import { Localization } from '../localizations/localization.entity';
 import { Student } from '../students/student.entity';
 import { User } from '../users/user.entity';
+import { EventState } from './state/eventState.entity';
 
 export class Event {
     private id!: string;
@@ -13,6 +14,7 @@ export class Event {
     private status!: string;
     private address!: Localization;
     private guests!: User[];
+    private currentState!: EventState;
     private invitedAcademicGroups!: AcademicGroup[];
 
     public getId(): string {
@@ -79,6 +81,14 @@ export class Event {
         this.guests = guests;
     }
 
+    public getCurrentState(): EventState {
+        return this.currentState;
+    }
+
+    public setCurrentState(value: EventState) {
+        this.currentState = value;
+    }
+
     public getInvitedAcademicGroups(): AcademicGroup[]{
         return this.invitedAcademicGroups;
     }
@@ -98,6 +108,7 @@ export class Event {
         status: string,
         address: Localization,
         guests: User[],
+        currentState: EventState,
         invitedAcademicGroup: AcademicGroup[],
     ) {
         this.setId(id);
@@ -108,6 +119,11 @@ export class Event {
         this.setStatus(status);
         this.setAddress(address);
         this.setGuests(guests);
+        this.setCurrentState(currentState);
         this.setInvitedAcademicGroups(invitedAcademicGroup);
+    }
+
+    public changeStatus(): void {
+        this.currentState.checkDate(this);
     }
 }
