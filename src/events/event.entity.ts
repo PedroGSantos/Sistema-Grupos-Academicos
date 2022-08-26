@@ -5,21 +5,21 @@ import { Student } from '../students/student.entity';
 import { User } from '../users/user.entity';
 
 export class Event {
-    private id!: number;
+    private id!: string;
     private name!: string;
     private startDate!: Date;
     private endDate!: Date;
     private organizers!: Student[];
     private status!: string;
     private address!: Localization;
-    private guests?: User[];
-    private invitedAcademicGroups?: AcademicGroup[];
+    private guests!: User[];
+    private invitedAcademicGroups!: AcademicGroup[];
 
-    public getId(): number {
+    public getId(): string {
         return this.id;
     }
 
-    public setId(id: number): void {
+    public setId(id: string): void {
         this.id = id;
     }
 
@@ -79,15 +79,27 @@ export class Event {
         this.guests = guests;
     }
 
-    public getInvitedAcademicGroups(): AcademicGroup[] | undefined {
+    public getInvitedAcademicGroups(): AcademicGroup[]{
         return this.invitedAcademicGroups;
     }
 
-    public setInvitedAcademicGroups(invitedAcademicGroups: AcademicGroup[]): void {
+    public setInvitedAcademicGroups(
+        invitedAcademicGroups: AcademicGroup[],
+    ): void {
         this.invitedAcademicGroups = invitedAcademicGroups;
     }
 
-    constructor(id: number, name: string, startDate: Date, endDate: Date, organizers: Student[], status: string, address: Localization, guests: User[], participantsLimit: number, events: Event[], invitedAcademicGroup: AcademicGroup[]){
+    constructor(
+        id: string,
+        name: string,
+        startDate: Date,
+        endDate: Date,
+        organizers: Student[],
+        status: string,
+        address: Localization,
+        guests: User[],
+        invitedAcademicGroup: AcademicGroup[],
+    ) {
         this.setId(id);
         this.setName(name);
         this.setStartDate(startDate);

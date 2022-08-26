@@ -1,5 +1,5 @@
 export class User {
-    private id!: number;
+    private id!: string;
 
     private name!: string;
 
@@ -11,11 +11,11 @@ export class User {
 
     private password!: string;
 
-    public getId():number{
+    public getId(): string{
         return this.id;
     }
 
-    public getName():string{
+    public getName(): string{
         return this.name;
     }
 
@@ -36,7 +36,7 @@ export class User {
         return this.password;
     }
 
-    public setId(id:number):void{
+    public setId(id: string): void{
         this.id = id;
     }
 
@@ -60,8 +60,7 @@ export class User {
         this.password = password;
     }
 
-    constructor(id:number, name:string, cpf:string, email:string, birthDate: Date, password: string){
-
+    constructor(id: string, name: string, cpf: string, email: string, birthDate: Date, password: string){
         this.setId(id);
         this.setName(name);
         this.setCPF(cpf);

@@ -1,12 +1,12 @@
 export class Department {
-    private id!: number;
+    private id!: string;
     private name!: string;
 
-    public getId(): number {
+    public getId(): string {
         return this.id;
     }
 
-    public setId(id: number): void {
+    public setId(id: string): void {
         this.id = id;
     }
 
@@ -18,7 +18,7 @@ export class Department {
         this.name = name;
     }
 
-    constructor(id: number, name: string) {
+    constructor(id: string, name: string) {
         this.setId(id);
         this.setName(name);
     }
