@@ -2,7 +2,37 @@ import { User } from '../users/user.entity';
 import { Department } from '../departments/department.entity';
 
 export class Professor extends User {
-    department!: Department;
+    private department!: Department;
+    private libraryPendencies!: boolean;
 
-    library_pendencies!: boolean;
+    public getDepartment(): Department {
+        return this.department;
+    }
+
+    public setDepartment(department: Department): void {
+        this.department = department;
+    }
+
+    public getLibraryPendencies(): boolean {
+        return this.libraryPendencies;
+    }
+
+    public setLibraryPendencies(libraryPendencies: boolean): void {
+        this.libraryPendencies = libraryPendencies;
+    }
+
+    constructor(
+        id: string,
+        name: string,
+        cpf: string,
+        email: string,
+        birthDate: Date,
+        password: string,
+        department: Department,
+        libraryPendencies: boolean,
+    ) {
+        super(id, name, cpf, email, birthDate, password);
+        this.setDepartment(department);
+        this.setLibraryPendencies(libraryPendencies);
+    }
 }

@@ -1,13 +1,72 @@
 export class Localization {
-    id!: number;
+    private id!: string;
+    private city!: string;
+    private state!: string;
+    private country!: string;
+    private number!: string;
+    private zip!: string;
 
-    city!: string;
+    public getId(): string {
+        return this.id;
+    }
 
-    state!: string;
+    public setId(id: string): void {
+        this.id = id;
+    }
 
-    country!: string;
+    public getCity(): string {
+        return this.city;
+    }
 
-    number!: string;
+    public setCity(city: string): void {
+        this.city = city;
+    }
 
-    zip!: string;
+    public getState(): string {
+        return this.state;
+    }
+
+    public setState(state: string): void {
+        this.state = state;
+    }
+
+    public getCountry(): string {
+        return this.country;
+    }
+
+    public setCountry(country: string): void {
+        this.country = country;
+    }
+
+    public getNumber(): string {
+        return this.number;
+    }
+
+    public setNumber(number: string): void {
+        this.number = number;
+    }
+
+    public getZip(): string {
+        return this.zip;
+    }
+
+    public setZip(zip: string): void {
+        this.zip = zip;
+    }
+
+    constructor(
+        id: string,
+        city: string,
+        state: string,
+        country: string,
+        number: string,
+        zip: string,
+    ) {
+        this.setId(id);
+        this.setCity(city);
+        this.setState(state);
+        this.setCountry(country);
+        this.setNumber(number);
+        this.setZip(zip);
+    }
 }
