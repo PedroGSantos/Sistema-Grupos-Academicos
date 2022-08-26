@@ -1,4 +1,5 @@
 import { Department } from '../departments/department.entity';
+import { UserState } from '../users/user-state.entity';
 import { User } from '../users/user.entity';
 
 export class Student extends User {
@@ -34,9 +35,9 @@ export class Student extends User {
         this.libraryPendencies = libraryPendencies;
     }
 
-    constructor(id:number, name:string, cpf:string, email:string, birthDate: Date, password: string, ra:number,department:Department,libraryPendencies: boolean){
+    constructor(id:number, name:string, cpf:string, email:string, birthDate: Date, password: string, ra:number,department:Department,libraryPendencies: boolean, current_state: UserState){
 
-        super(id, name, cpf, email, birthDate, password);
+        super(id, name, cpf, email, birthDate, password,current_state);
         this.setRA(ra);
         this.setDepartment(department);
         this.setLibraryPendencies(libraryPendencies);
