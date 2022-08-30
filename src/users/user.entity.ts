@@ -66,7 +66,7 @@ export abstract class User {
     }
 
     constructor(
-        id: number,
+        id: string,
         name: string,
         cpf: string,
         email: string,
