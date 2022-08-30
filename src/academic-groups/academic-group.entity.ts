@@ -1,5 +1,7 @@
 import { User } from '../users/user.entity';
 import { Department } from '../departments/department.entity';
+import { Student } from '../students/student.entity';
+import { Professor } from '../professors/professor.entity';
 
 export class AcademicGroup {
     private id!: string;
@@ -54,6 +56,7 @@ export class AcademicGroup {
     }
 
     public getResponsible(): User {
+        //ListResponsible
         return this.responsible;
     }
 
@@ -62,6 +65,7 @@ export class AcademicGroup {
     }
 
     public getParticipants(): User[] {
+        //ListParticipants
         return this.participants;
     }
 
@@ -78,6 +82,7 @@ export class AcademicGroup {
     }
 
     public getEvents(): Event[] {
+        //ListEvents
         return this.events;
     }
 
@@ -115,5 +120,35 @@ export class AcademicGroup {
         this.setParticipantsLimit(participantsLimit);
         this.setEvents(events);
         this.setCreatedAt(createdAt);
+    }
+
+    public addStudent(student: Student, disciplinesNumber: number): boolean {
+        if (student.getLibraryPendencies() || disciplinesNumber < 3) {
+            return false;
+        }
+
+        this.participants.push(student);
+        return true;
+    }
+
+    public changeResponsable(user: User): boolean {
+        if (user.getLibraryPendencies()) {
+            return false;
+        }
+
+        this.setResponsible(user);
+        return true;
+    }
+
+    public removeStudent(aluno: Student): boolean {
+        this.participants.filter((s) => s.getId() == aluno.getId());
+        return true;
+    }
+
+    public disableAcademicGroup(user: User): boolean {
+        if (user.getId() == this.getResponsible().getId()) return false;
+
+        this.active = false;
+        return true;
     }
 }

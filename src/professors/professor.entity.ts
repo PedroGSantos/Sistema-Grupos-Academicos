@@ -13,7 +13,7 @@ export class Professor extends User {
         this.department = department;
     }
 
-    public isLibraryPendencies(): boolean {
+    public getLibraryPendencies(): boolean {
         return this.libraryPendencies;
     }
 
