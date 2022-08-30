@@ -1,18 +1,18 @@
 import { Student } from "../../students/student.entity";
 
 export class Phase {
-    private id!: number;
+    private id!: string;
     private name!: string;
     private startDate!: Date;
     private endDate!: Date;
     private participants?: Student[];
     private approveds?: Student[];
 
-    public getId(): number {
+    public getId(): string {
         return this.id;
     }
 
-    public setId(value: number) {
+    public setId(value: string) {
         this.id = value;
     }
 
@@ -56,7 +56,14 @@ export class Phase {
         this.approveds = approveds;
     }
 
-    constructor(name: string, startDate: Date, endDate: Date, participants: Student[], approveds: Student[]){
+    constructor(
+        id: string,
+        name: string,
+        startDate: Date,
+        endDate: Date,
+        participants: Student[],
+        approveds: Student[],
+    ) {
         this.setName(name);
         this.setStartDate(startDate);
         this.setEndDate(endDate);

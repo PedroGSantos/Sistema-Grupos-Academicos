@@ -9,29 +9,29 @@ export class Student extends User {
 
     private libraryPendencies!: boolean;
 
-    public getRA(): number{
+    public getRA(): number {
         return this.ra;
     }
 
-    public getDepartment(): Department{
+    public getDepartment(): Department {
         return this.department;
     }
 
-    public getLibraryPendencies(): boolean{
+    public getLibraryPendencies(): boolean {
         //Aqui será necessário integrar com o outro sistema, o de biblioteca
-        return this.libraryPendencies
+        return this.libraryPendencies;
     }
 
-    public setRA(ra:number): void{
+    public setRA(ra: number): void {
         //Fazer a verificação?
         this.ra = ra;
     }
 
-    public setDepartment(department: Department): void{
+    public setDepartment(department: Department): void {
         this.department = department;
     }
 
-    public setLibraryPendencies(libraryPendencies: boolean): void{
+    public setLibraryPendencies(libraryPendencies: boolean): void {
         this.libraryPendencies = libraryPendencies;
     }
 
@@ -42,6 +42,4 @@ export class Student extends User {
         this.setDepartment(department);
         this.setLibraryPendencies(libraryPendencies);
     }
-    
 }
-

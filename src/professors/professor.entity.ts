@@ -13,7 +13,7 @@ export class Professor extends User {
         this.department = department;
     }
 
-    public isLibraryPendencies(): boolean {
+    public getLibraryPendencies(): boolean {
         return this.libraryPendencies;
     }
 
@@ -21,8 +21,16 @@ export class Professor extends User {
         this.libraryPendencies = libraryPendencies;
     }
 
-    constructor(id:number, name:string, cpf:string, email:string, birthDate: Date, password: string, ra:number,department:Department,libraryPendencies: boolean) {
-        
+    constructor(
+        id: string,
+        name: string,
+        cpf: string,
+        email: string,
+        birthDate: Date,
+        password: string,
+        department: Department,
+        libraryPendencies: boolean,
+    ) {
         super(id, name, cpf, email, birthDate, password);
         this.setDepartment(department);
         this.setLibraryPendencies(libraryPendencies);

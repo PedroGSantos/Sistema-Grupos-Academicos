@@ -1,7 +1,7 @@
 import { UserState } from './user-state.entity';
 
-export class User {
-    private id!: number;
+export abstract class User {
+    private id!: string;
     private name!: string;
     private cpf!: string;
     private email!: string;
@@ -9,11 +9,11 @@ export class User {
     private password!: string;
     private current_state!: UserState;
 
-    public getId(): number {
+    public getId(): string {
         return this.id;
     }
 
-    public setId(id: number): void {
+    public setId(id: string): void {
         this.id = id;
     }
 
@@ -82,4 +82,5 @@ export class User {
         this.setPassword(password);
         this.setUserState(current_state);
     }
+    abstract getLibraryPendencies(): boolean;
 }

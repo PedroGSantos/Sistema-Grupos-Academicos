@@ -1,16 +1,16 @@
 export class Localization {
-    private id!: number;
+    private id!: string;
     private city!: string;
     private state!: string;
     private country!: string;
     private number!: string;
     private zip!: string;
 
-    public getId(): number {
+    public getId(): string {
         return this.id;
     }
 
-    public setId(id: number): void {
+    public setId(id: string): void {
         this.id = id;
     }
 
@@ -54,7 +54,14 @@ export class Localization {
         this.zip = zip;
     }
 
-    constructor(id: number, city: string, state: string, country: string, number: string, zip: string) {
+    constructor(
+        id: string,
+        city: string,
+        state: string,
+        country: string,
+        number: string,
+        zip: string,
+    ) {
         this.setId(id);
         this.setCity(city);
         this.setState(state);
