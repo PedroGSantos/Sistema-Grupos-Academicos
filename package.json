@@ -42,6 +42,7 @@
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-prettier": "^4.2.1",
         "prettier": "^2.7.1",
-        "prisma": "^4.2.1"
+        "prisma": "^4.2.1",
+        "sucrase": "^3.25.0"
     }
 }
