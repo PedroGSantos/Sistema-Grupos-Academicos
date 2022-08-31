@@ -11,19 +11,21 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.Uuid
-  name      String   @db.VarChar(100)
-  cpf       String   @db.VarChar(11)
-  email     String   @db.Text
-  birthDate DateTime @db.Timestamptz(6)
-  password  String   @db.Text
-
-  student              Student[]
-  professor            Professor[]
-  academicGroupHasUser AcademicGroupHasUser[]
-  EventHasOrganizer    EventHasOrganizer[]
-  EventHasGuest        EventHasGuest[]
-  AcademicGroup        AcademicGroup[]
+  id                    String                  @id @default(uuid()) @db.Uuid
+  name                  String                  @db.VarChar(100)
+  cpf                   String                  @db.VarChar(11)
+  email                 String                  @db.Text
+  birthDate             DateTime                @db.Timestamptz(6)
+  password              String                  @db.Text
+  student               Student[]
+  professor             Professor[]
+  academicGroupHasUser  AcademicGroupHasUser[]
+  EventHasUserOrganizer EventHasUserOrganizer[]
+  EventHasGuest         EventHasGuest[]
+  AcademicGroup         AcademicGroup[]
+  createdAt             DateTime                @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime                @default(now()) @db.Timestamptz(6)
+  deletedAt             DateTime?               @db.Timestamptz(6)
 }
 
 model Department {
@@ -32,94 +34,136 @@ model Department {
   student       Student[]
   professor     Professor[]
   academicGroup AcademicGroup[]
+  createdAt     DateTime        @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime        @default(now()) @db.Timestamptz(6)
+  deletedAt     DateTime?       @db.Timestamptz(6)
 }
 
 model Student {
-  ra                Int               @id
-  userId            String            @db.Uuid
-  departmentId      String            @db.Uuid
-  libraryPendencies Boolean           @default(false)
-  phasesApplied     StudentsOnPhase[]
+  ra                Int              @id
+  userId            String           @db.Uuid
+  departmentId      String           @db.Uuid
+  libraryPendencies Boolean          @default(false)
+  phasesApplied     StudentOnPhase[]
+  state             StudentStateEnum
+  createdAt         DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime         @default(now()) @db.Timestamptz(6)
+  deletedAt         DateTime?        @db.Timestamptz(6)
 
   department Department @relation(fields: [departmentId], references: [id])
   user       User       @relation(fields: [userId], references: [id])
+}
+
+enum StudentStateEnum {
+  active
+  away
+  disconnected
 }
 
 model Professor {
-  userId            String  @id @db.Uuid
-  departmentId      String  @db.Uuid
-  libraryPendencies Boolean @default(false)
+  userId            String           @id @db.Uuid
+  departmentId      String           @db.Uuid
+  libraryPendencies Boolean          @default(false)
+  state             StudentStateEnum
+  createdAt         DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime         @default(now()) @db.Timestamptz(6)
+  deletedAt         DateTime?        @db.Timestamptz(6)
 
   department Department @relation(fields: [departmentId], references: [id])
   user       User       @relation(fields: [userId], references: [id])
 }
 
+enum ProfessorStateEnum {
+  active
+  away
+  disconnected
+}
+
 model Localization {
-  id      String  @id @default(uuid()) @db.Uuid
-  city    String  @db.VarChar(40)
-  state   String  @db.VarChar(2)
-  country String  @db.VarChar(15)
-  number  String  @db.VarChar(40)
-  zip     String  @db.VarChar(15)
-  Event   Event[]
+  id        String    @id @default(uuid()) @db.Uuid
+  city      String    @db.VarChar(40)
+  state     String    @db.VarChar(2)
+  country   String    @db.VarChar(15)
+  number    String    @db.VarChar(40)
+  zip       String    @db.VarChar(15)
+  Event     Event[]
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt DateTime? @db.Timestamptz(6)
 }
 
 model AcademicGroup {
-  id            String  @id @default(uuid()) @db.Uuid
-  name          String  @db.VarChar(100)
-  description   String  @db.Text
-  active        Boolean @default(true)
-  departmentId  String  @db.Uuid
-  responsibleId String  @db.Uuid
+  id                     String                         @id @default(uuid()) @db.Uuid
+  name                   String                         @db.VarChar(100)
+  description            String                         @db.Text
+  active                 Boolean                        @default(true)
+  departmentId           String                         @db.Uuid
+  responsibleId          String                         @db.Uuid
+  createdAt              DateTime                       @default(now()) @db.Timestamptz(6)
+  updatedAt              DateTime                       @default(now()) @db.Timestamptz(6)
+  deletedAt              DateTime?                      @db.Timestamptz(6)
+  academicGroupHasUser   AcademicGroupHasUser[]
+  recruitmentProcess     RecruitmentProcess[]
+  participatedEvents     EventHasInvitedAcademicGroup[]
+  eventHasGroupOrganizer EventHasGroupOrganizer[]
 
-  department           Department             @relation(fields: [departmentId], references: [id])
-  academicGroupHasUser AcademicGroupHasUser[]
-  recruitmentProcess   RecruitmentProcess[]
-  responsible          User                   @relation(fields: [responsibleId], references: [id])
+  responsible User       @relation(fields: [responsibleId], references: [id])
+  department  Department @relation(fields: [departmentId], references: [id])
 }
 
 model AcademicGroupHasUser {
-  id              String  @id @default(uuid()) @db.Uuid
-  userId          String  @db.Uuid
-  academicGroupId String  @db.Uuid
-  isResponsible   Boolean @default(false)
+  id              String    @id @default(uuid()) @db.Uuid
+  userId          String    @db.Uuid
+  academicGroupId String    @db.Uuid
+  isResponsible   Boolean   @default(false)
+  createdAt       DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt       DateTime? @db.Timestamptz(6)
 
   user          User          @relation(fields: [userId], references: [id])
   academicGroup AcademicGroup @relation(fields: [academicGroupId], references: [id])
 }
 
 model RecruitmentProcess {
-  id                  String        @id @default(uuid()) @db.Uuid
-  startDate           DateTime      @db.Timestamptz(6)
-  endDate             DateTime      @db.Timestamptz(6)
-  subscribesNumber    Int           @default(0)
-  opportunitiesNumber Int           @default(0)
+  id                  String    @id @default(uuid()) @db.Uuid
+  startDate           DateTime  @db.Timestamptz(6)
+  endDate             DateTime  @db.Timestamptz(6)
+  subscribesNumber    Int       @default(0)
+  opportunitiesNumber Int       @default(0)
+  academicGroupId     String    @db.Uuid
   phases              Phase[]
-  academicGroup       AcademicGroup @relation(fields: [academicGroupId], references: [id])
-  academicGroupId     String        @db.Uuid
+  createdAt           DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt           DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt           DateTime? @db.Timestamptz(6)
+
+  academicGroup AcademicGroup @relation(fields: [academicGroupId], references: [id])
 }
 
 model Phase {
-  id                   String            @id @default(uuid()) @db.Uuid
-  name                 String            @db.VarChar(15)
-  startDate            DateTime          @db.Timestamptz(6)
-  endDate              DateTime          @db.Timestamptz(6)
-  participantsAtPhase  StudentsOnPhase[]
-  recruitmentProcessId String?           @db.Uuid
+  id                   String           @id @default(uuid()) @db.Uuid
+  name                 String           @db.VarChar(15)
+  startDate            DateTime         @db.Timestamptz(6)
+  endDate              DateTime         @db.Timestamptz(6)
+  participantsAtPhase  StudentOnPhase[]
+  recruitmentProcessId String?          @db.Uuid
+  createdAt            DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime         @default(now()) @db.Timestamptz(6)
+  deletedAt            DateTime?        @db.Timestamptz(6)
 
   recruitmentProcess RecruitmentProcess? @relation(fields: [recruitmentProcessId], references: [id])
 }
 
-model StudentsOnPhase {
-  id String @id @default(uuid()) @db.Uuid
+model StudentOnPhase {
+  id         String    @id @default(uuid()) @db.Uuid
+  studentRa  Int?
+  phaseId    String?   @db.Uuid
+  isApproved Boolean   @default(false)
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt  DateTime? @db.Timestamptz(6)
 
-  student   Student? @relation(fields: [studentRa], references: [ra])
-  studentRa Int?
-
-  phase   Phase?  @relation(fields: [phaseId], references: [id])
-  phaseId String? @db.Uuid
-
-  isApproved Boolean @default(false)
+  student Student? @relation(fields: [studentRa], references: [ra])
+  phase   Phase?   @relation(fields: [phaseId], references: [id])
 }
 
 model Event {
@@ -127,11 +171,15 @@ model Event {
   name                  String                         @db.VarChar(50)
   startDate             DateTime                       @db.Timestamptz(6)
   endDate               DateTime                       @db.Timestamptz(6)
-  organizers            EventHasOrganizer[]
+  organizersUsers       EventHasUserOrganizer[]
+  organizersGroups      EventHasGroupOrganizer[]
   status                EventStatesEnum
   addressId             String                         @db.Uuid
   guests                EventHasGuest[]
   invitedAcademicGroups EventHasInvitedAcademicGroup[]
+  createdAt             DateTime                       @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime                       @default(now()) @db.Timestamptz(6)
+  deletedAt             DateTime?                      @db.Timestamptz(6)
 
   address Localization @relation(fields: [addressId], references: [id])
 }
@@ -143,27 +191,50 @@ enum EventStatesEnum {
   cancelled
 }
 
-model EventHasOrganizer {
-  id      String @id @default(uuid()) @db.Uuid
-  userId  String @db.Uuid
-  eventId String @db.Uuid
+model EventHasUserOrganizer {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  eventId   String    @db.Uuid
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt DateTime? @db.Timestamptz(6)
 
   user  User  @relation(fields: [userId], references: [id])
   event Event @relation(fields: [eventId], references: [id])
 }
 
+model EventHasGroupOrganizer {
+  id              String    @id @default(uuid()) @db.Uuid
+  academicGroupId String    @db.Uuid
+  eventId         String    @db.Uuid
+  createdAt       DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt       DateTime? @db.Timestamptz(6)
+
+  academicGroup AcademicGroup @relation(fields: [academicGroupId], references: [id])
+  event         Event         @relation(fields: [eventId], references: [id])
+}
+
 model EventHasGuest {
-  id      String @id @default(uuid()) @db.Uuid
-  userId  String @db.Uuid
-  eventId String @db.Uuid
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  eventId   String    @db.Uuid
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt DateTime? @db.Timestamptz(6)
 
   user  User  @relation(fields: [userId], references: [id])
   event Event @relation(fields: [eventId], references: [id])
 }
 
 model EventHasInvitedAcademicGroup {
-  id      String  @id @default(uuid()) @db.Uuid
-  eventId String? @db.Uuid
+  id              String    @id @default(uuid()) @db.Uuid
+  eventId         String?   @db.Uuid
+  academicGroupId String?   @db.Uuid
+  createdAt       DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt       DateTime? @db.Timestamptz(6)
 
-  event Event? @relation(fields: [eventId], references: [id])
+  event         Event?         @relation(fields: [eventId], references: [id])
+  AcademicGroup AcademicGroup? @relation(fields: [academicGroupId], references: [id])
 }
