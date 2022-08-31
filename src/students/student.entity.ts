@@ -1,6 +1,11 @@
 import { Department } from '../departments/department.entity';
-import { UserState } from '../users/user-state.entity';
-import { User } from '../users/user.entity';
+import { IUserConstructor, User } from '../users/user.entity';
+
+export interface IStudentConstructor {
+    ra?: number;
+    department?: Department;
+    libraryPendencies?: boolean;
+}
 
 export class Student extends User {
     private ra!: number;
@@ -35,11 +40,11 @@ export class Student extends User {
         this.libraryPendencies = libraryPendencies;
     }
 
-    constructor(id:number, name:string, cpf:string, email:string, birthDate: Date, password: string, ra:number,department:Department,libraryPendencies: boolean, current_state: UserState){
-
-        super(id, name, cpf, email, birthDate, password,current_state);
-        this.setRA(ra);
-        this.setDepartment(department);
-        this.setLibraryPendencies(libraryPendencies);
+    constructor(
+        userConstructor: IUserConstructor,
+        studentConstructor: IStudentConstructor,
+    ) {
+        super(userConstructor);
+        Object.assign(this, studentConstructor);
     }
 }

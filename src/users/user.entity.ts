@@ -1,5 +1,15 @@
 import { UserState } from './user-state.entity';
 
+export interface IUserConstructor {
+    id?: string;
+    name?: string;
+    cpf?: string;
+    email?: string;
+    birthDate?: Date;
+    password?: string;
+    current_state?: UserState;
+}
+
 export abstract class User {
     private id!: string;
     private name!: string;
@@ -65,22 +75,9 @@ export abstract class User {
         this.current_state = current_state;
     }
 
-    constructor(
-        id: string,
-        name: string,
-        cpf: string,
-        email: string,
-        birthDate: Date,
-        password: string,
-        current_state: UserState,
-    ) {
-        this.setId(id);
-        this.setName(name);
-        this.setCPF(cpf);
-        this.setEmail(email);
-        this.setBirthDate(birthDate);
-        this.setPassword(password);
-        this.setUserState(current_state);
+    constructor(data: IUserConstructor) {
+        Object.assign(this, data);
     }
+
     abstract getLibraryPendencies(): boolean;
 }

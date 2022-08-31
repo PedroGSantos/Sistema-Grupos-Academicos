@@ -1,11 +1,31 @@
-import express, { Express } from 'express';
-import dotenv from 'dotenv';
-dotenv.config();
+import express, { Application } from 'express';
+import bodyParser from 'body-parser';
 
-const app: Express = express();
+export class App {
+    public app: Application;
+    public port: number;
 
-app.use(express.urlencoded({ extended: false }));
+    constructor(controllers: any[], port: number) {
+        this.app = express();
+        this.port = port;
 
-app.use(express.json());
+        this.initializeMiddlewares();
+        this.initializeControllers(controllers);
+    }
 
-app.listen(process.env.PORT || 3000);
+    private initializeMiddlewares() {
+        this.app.use(bodyParser.json());
+    }
+
+    private initializeControllers(controllers: any[]) {
+        controllers.forEach((controller: any) => {
+            this.app.use('/', controller.router);
+        });
+    }
+
+    public listen() {
+        this.app.listen(this.port, () => {
+            console.log(`App listening on port ${this.port}`);
+        });
+    }
+}

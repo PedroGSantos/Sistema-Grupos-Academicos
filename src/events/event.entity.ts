@@ -5,6 +5,18 @@ import { Student } from '../students/student.entity';
 import { User } from '../users/user.entity';
 import { EventState } from './state/eventState.entity';
 
+export interface IEventConstructor {
+    id?: string;
+    name?: string;
+    startDate?: Date;
+    endDate?: Date;
+    organizers?: Student[];
+    address?: Localization;
+    guests?: User[];
+    currentState?: EventState;
+    invitedAcademicGroups?: AcademicGroup[];
+}
+
 export class Event {
     private id!: string;
     private name!: string;
@@ -80,7 +92,7 @@ export class Event {
         this.currentState = value;
     }
 
-    public getInvitedAcademicGroups(): AcademicGroup[]{
+    public getInvitedAcademicGroups(): AcademicGroup[] {
         return this.invitedAcademicGroups;
     }
 
@@ -90,27 +102,8 @@ export class Event {
         this.invitedAcademicGroups = invitedAcademicGroups;
     }
 
-    constructor(
-        id: string,
-        name: string,
-        startDate: Date,
-        endDate: Date,
-        organizers: Student[],
-        status: string,
-        address: Localization,
-        guests: User[],
-        currentState: EventState,
-        invitedAcademicGroup: AcademicGroup[],
-    ) {
-        this.setId(id);
-        this.setName(name);
-        this.setStartDate(startDate);
-        this.setEndDate(endDate);
-        this.setOrganizers(organizers);
-        this.setAddress(address);
-        this.setGuests(guests);
-        this.setCurrentState(currentState);
-        this.setInvitedAcademicGroups(invitedAcademicGroup);
+    constructor(data: IEventConstructor) {
+        Object.assign(this, data);
     }
 
     public changeStatus(): void {

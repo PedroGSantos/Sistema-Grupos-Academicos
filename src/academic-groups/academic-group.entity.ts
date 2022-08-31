@@ -2,6 +2,20 @@ import { User } from '../users/user.entity';
 import { Department } from '../departments/department.entity';
 import { Student } from '../students/student.entity';
 import { AcademicGroupState } from './state/academic-group-state.entity';
+import { Event } from '../events/event.entity';
+
+export interface IAcademicGroupConstructor {
+    id?: string;
+    name?: string;
+    description?: string;
+    department?: Department;
+    responsible?: User;
+    participants?: User[];
+    participantsLimit?: number;
+    events?: Event[];
+    createdAt?: Date;
+    currentState?: AcademicGroupState;
+}
 
 export class AcademicGroup {
     private id!: string;
@@ -97,28 +111,8 @@ export class AcademicGroup {
         this.createdAt = createdAt;
     }
 
-    constructor(
-        id: string,
-        name: string,
-        description: string,
-        department: Department,
-        responsible: User,
-        participants: User[],
-        participantsLimit: number,
-        events: Event[],
-        createdAt: Date,
-        currentState: AcademicGroupState,
-    ) {
-        this.setId(id);
-        this.setName(name);
-        this.setDescription(description);
-        this.setDepartment(department);
-        this.setResponsible(responsible);
-        this.setParticipants(participants);
-        this.setParticipantsLimit(participantsLimit);
-        this.setEvents(events);
-        this.setCreatedAt(createdAt);
-        this.setAcademicGroupState(currentState);
+    constructor(data: IAcademicGroupConstructor) {
+        Object.assign(this, data);
     }
 
     //O parâmetro disciplinesNumber irá mudar. Será necessário fazer uma requisição para os outros sistemas
@@ -150,6 +144,10 @@ export class AcademicGroup {
         }
         this.participants.filter((s) => s.getId() == aluno.getId());
         return true;
+    }
+
+    public malucasso() {
+        console.log(`${this.createdAt} ${this.currentState} ${this.id}`);
     }
 
     public disableAcademicGroup(user: User): boolean {
