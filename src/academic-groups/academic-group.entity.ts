@@ -124,7 +124,7 @@ export class AcademicGroup {
         events: Event[],
         createdAt: Date,
         currentState: AcademicGroupState,
-        context: Context,
+        strategy: string,
     ) {
         this.setId(id);
         this.setName(name);
@@ -136,7 +136,7 @@ export class AcademicGroup {
         this.setEvents(events);
         this.setCreatedAt(createdAt);
         this.setAcademicGroupState(currentState);
-        this.setContextStrategyListGroup(context);
+        this.setContextStrategyListGroup(strategy);
     }
 
     //O parâmetro disciplinesNumber irá mudar. Será necessário fazer uma requisição para os outros sistemas

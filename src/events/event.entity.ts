@@ -96,7 +96,6 @@ export class Event {
         startDate: Date,
         endDate: Date,
         organizers: Student[],
-        status: string,
         address: Localization,
         guests: User[],
         currentState: EventState,
