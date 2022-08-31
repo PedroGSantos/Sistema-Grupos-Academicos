@@ -32,4 +32,38 @@ export class ProfessorRepository {
 
         return professor;
     }
+
+    async findProfessorsInDeactivatedGroups(): Promise<Professor[]> {
+        const professorsFound = await prismaClient.professor.findMany({
+            where: {
+                user: {
+                    academicGroupHasUser: {
+                        some: {
+                            academicGroup: {
+                                currentState: false,
+                            },
+                        },
+                    },
+                },
+            },
+            include: {
+                user: true,
+            },
+        });
+
+        if (!professorsFound) {
+            return [];
+        }
+
+        const professors = professorsFound.map((professorConstructorParams) => {
+            const professor = new Professor(
+                { ...professorConstructorParams.user },
+                { ...professorConstructorParams },
+            ) as any;
+            delete professor.user;
+            return professor as Professor;
+        });
+
+        return professors;
+    }
 }
