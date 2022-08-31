@@ -1,4 +1,4 @@
-interface IDepartmentConstructor {
+export interface IDepartmentConstructor {
     id: string;
     name: string;
 }

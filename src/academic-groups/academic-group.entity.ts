@@ -112,16 +112,6 @@ export class AcademicGroup {
     }
 
     constructor(data: IAcademicGroupConstructor) {
-        /* this.setId(id);
-        this.setName(name);
-        this.setDescription(description);
-        this.setDepartment(department);
-        this.setResponsible(responsible);
-        this.setParticipants(participants);
-        //this.setParticipantsLimit(participantsLimit);
-        this.setEvents(events);
-        this.setCreatedAt(createdAt);
-        this.setAcademicGroupState(currentState); */
         Object.assign(this, data);
     }
 

@@ -1,5 +1,10 @@
-import { User } from '../users/user.entity';
+import { IUserConstructor, User } from '../users/user.entity';
 import { Department } from '../departments/department.entity';
+
+export interface IProfessorConstructor {
+    department?: Department;
+    libraryPendencies?: boolean;
+}
 
 export class Professor extends User {
     private department!: Department;
@@ -22,17 +27,10 @@ export class Professor extends User {
     }
 
     constructor(
-        id: string,
-        name: string,
-        cpf: string,
-        email: string,
-        birthDate: Date,
-        password: string,
-        department: Department,
-        libraryPendencies: boolean,
+        userConstructor: IUserConstructor,
+        professorConstructor: IProfessorConstructor,
     ) {
-        super(id, name, cpf, email, birthDate, password);
-        this.setDepartment(department);
-        this.setLibraryPendencies(libraryPendencies);
+        super(userConstructor);
+        Object.assign(professorConstructor);
     }
 }
