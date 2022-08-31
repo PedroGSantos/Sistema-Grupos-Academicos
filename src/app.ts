@@ -5,7 +5,7 @@ export class App {
     public app: Application;
     public port: number;
 
-    constructor(controllers: any, port: number) {
+    constructor(controllers: any[], port: number) {
         this.app = express();
         this.port = port;
 
@@ -17,7 +17,7 @@ export class App {
         this.app.use(bodyParser.json());
     }
 
-    private initializeControllers(controllers: any) {
+    private initializeControllers(controllers: any[]) {
         controllers.forEach((controller: any) => {
             this.app.use('/', controller.router);
         });

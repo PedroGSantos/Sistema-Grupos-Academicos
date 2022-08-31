@@ -12,6 +12,6 @@ export class AcademicGroupController {
     }
 
     public initializeRouter(): void {
-        this.router.get(this.path, this.academicGroupService.findMany);
+        this.router.get(this.path, this.academicGroupService.findById);
     }
 }

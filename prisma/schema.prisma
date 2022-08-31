@@ -96,12 +96,13 @@ model AcademicGroup {
   id                     String                         @id @default(uuid()) @db.Uuid
   name                   String                         @db.VarChar(100)
   description            String                         @db.Text
-  active                 Boolean                        @default(true)
+  currentState           Boolean                        @default(true)
   departmentId           String                         @db.Uuid
   responsibleId          String                         @db.Uuid
   createdAt              DateTime                       @default(now()) @db.Timestamptz(6)
   updatedAt              DateTime                       @default(now()) @db.Timestamptz(6)
   deletedAt              DateTime?                      @db.Timestamptz(6)
+  participantsLimit      Int                            @default(15)
   academicGroupHasUser   AcademicGroupHasUser[]
   recruitmentProcess     RecruitmentProcess[]
   participatedEvents     EventHasInvitedAcademicGroup[]

@@ -1,3 +1,8 @@
+interface IDepartmentConstructor {
+    id: string;
+    name: string;
+}
+
 export class Department {
     private id!: string;
     private name!: string;
@@ -18,8 +23,7 @@ export class Department {
         this.name = name;
     }
 
-    constructor(id: string, name: string) {
-        this.setId(id);
-        this.setName(name);
+    constructor(data: IDepartmentConstructor) {
+        Object.assign(this, data);
     }
 }
