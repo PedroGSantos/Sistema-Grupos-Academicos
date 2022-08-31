@@ -80,8 +80,27 @@ export class AcademicGroup {
         this.participantsLimit = participantsLimit;
     }
 
-    public getEvents(): Event[] {
-        //ListEvents
+    public getFinishedEvents(): Event[] {
+        //Pegar os estados do evento que são finished (não está pronto)
+        //this.events.filter((s) => s.get() == aluno.getId());
+        return this.events;
+    }
+
+    public getHappeningEvents(): Event[] {
+        //Pegar os estados do evento que são Happening (não está pronto)
+        //this.events.filter((s) => s.get() == aluno.getId());
+        return this.events;
+    }
+
+    public getScheduledEvents(): Event[] {
+        //Pegar os estados do evento que são Scheduled (não está pronto)
+        //this.events.filter((s) => s.get() == aluno.getId());
+        return this.events;
+    }
+
+    public getCancelledEvents(): Event[] {
+        //Pegar os estados do evento que são Cancelled (não está pronto)
+        //this.events.filter((s) => s.get() == aluno.getId());
         return this.events;
     }
 
@@ -148,7 +167,16 @@ export class AcademicGroup {
         if (!this.currentState.isActive()) {
             return false;
         }
-        this.participants.filter((s) => s.getId() == aluno.getId());
+        const tamanho = this.participants.length;
+
+        this.participants = this.participants.filter(
+            (s) => s.getId() == aluno.getId(),
+        );
+
+        if (tamanho == this.participants.length) {
+            return false;
+        }
+
         return true;
     }
 
@@ -161,5 +189,12 @@ export class AcademicGroup {
 
         this.currentState.modifyStatusGroup(this);
         return true;
+    }
+
+    public listStudentsWithLibraryPendencies() {
+        //Fazer requisição para pegar as pendenceis dos amigos
+        return this.participants.filter(
+            (s) => s.getLibraryPendencies() == true,
+        );
     }
 }
