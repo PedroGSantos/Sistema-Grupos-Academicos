@@ -18,7 +18,7 @@ export interface IAcademicGroupConstructor {
     events?: Event[];
     createdAt?: Date;
     currentState?: AcademicGroupState;
-    strategy: string;
+    contextStrategyListGroup?: Context;
 }
 
 export class AcademicGroup {
