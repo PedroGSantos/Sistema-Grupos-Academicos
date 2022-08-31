@@ -1,5 +1,6 @@
 import { User } from '../users/user.entity';
 import { Department } from '../departments/department.entity';
+import { UserState } from '../users/user-state.entity';
 
 export class Professor extends User {
     private department!: Department;
@@ -30,9 +31,11 @@ export class Professor extends User {
         password: string,
         department: Department,
         libraryPendencies: boolean,
+        userState: UserState,
     ) {
-        super(id, name, cpf, email, birthDate, password);
+        super(id, name, cpf, email, birthDate, password, userState);
         this.setDepartment(department);
         this.setLibraryPendencies(libraryPendencies);
+        this.setUserState(userState);
     }
 }

@@ -1,24 +1,10 @@
-import { Department } from '../../departments/department.entity';
-import { UserState } from '../../users/user-state.entity';
-import { Guest } from './guest.interface';
+import { Guest } from './guest.Interface';
 
 export abstract class GuestCreator {
-    public abstract factoryMethod(
-        id: string,
-        name: string,
-        department: Department,
-        typeUser?: string,
-        cpf?: string,
-        email?: string,
-        birthDate?: Date,
-        password?: string,
-        ra?: number,
-        libraryPendencies?: boolean,
-        current_state?: UserState,
-    ): Guest;
+    public abstract factoryMethod(id: string, typeUser?: string): Guest;
 
-    public mainOperation(id: string, name: string, department: Department, typeUser?: string): void {
-        const guest = this.factoryMethod(id, ty);
+    public mainOperation(id: string, typeUser?: string): void {
+        const guest = this.factoryMethod(id);
         guest.attendamce();
     }
 }

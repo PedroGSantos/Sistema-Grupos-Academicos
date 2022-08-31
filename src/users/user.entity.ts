@@ -1,4 +1,4 @@
-import { Guest } from '../events/factory/guest.interface';
+import { Guest } from '../events/factory/guest.Interface';
 import { UserState } from './user-state.entity';
 
 export abstract class User implements Guest {

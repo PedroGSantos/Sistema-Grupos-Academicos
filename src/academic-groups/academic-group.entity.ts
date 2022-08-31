@@ -2,7 +2,7 @@ import { User } from '../users/user.entity';
 import { Department } from '../departments/department.entity';
 import { Student } from '../students/student.entity';
 import { AcademicGroupState } from './state/academic-group-state.entity';
-import { Guest } from '../events/factory/guest.interface';
+import { Guest } from '../events/factory/guest.Interface';
 
 export class AcademicGroup implements Guest {
     private id!: string;

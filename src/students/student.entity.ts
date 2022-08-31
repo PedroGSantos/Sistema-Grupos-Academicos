@@ -45,7 +45,7 @@ export class Student extends User {
         ra: number,
         department: Department,
         libraryPendencies: boolean,
-        current_state: UserState
+        current_state: UserState,
     ) {
         super(id, name, cpf, email, birthDate, password, current_state);
         this.setRA(ra);
