@@ -2,8 +2,9 @@ import { User } from '../users/user.entity';
 import { Department } from '../departments/department.entity';
 import { Student } from '../students/student.entity';
 import { AcademicGroupState } from './state/academic-group-state.entity';
+import { Guest } from '../events/factory/guest.interface';
 
-export class AcademicGroup {
+export class AcademicGroup implements Guest {
     private id!: string;
     private name!: string;
     private description!: string;
@@ -95,6 +96,12 @@ export class AcademicGroup {
 
     public setCreatedAt(createdAt: Date): void {
         this.createdAt = createdAt;
+    }
+
+    public attendamce(): void {
+        const participants = this.getParticipants();
+        for (let i = 0; i < this.getParticipants().length; i++)
+            console.log(`${participants[i].getName} PRESENTE`);
     }
 
     constructor(

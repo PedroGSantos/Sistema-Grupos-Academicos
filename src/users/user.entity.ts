@@ -1,6 +1,7 @@
+import { Guest } from '../events/factory/guest.interface';
 import { UserState } from './user-state.entity';
 
-export abstract class User {
+export abstract class User implements Guest {
     private id!: string;
     private name!: string;
     private cpf!: string;
@@ -63,6 +64,10 @@ export abstract class User {
 
     public setUserState(current_state: UserState): void {
         this.current_state = current_state;
+    }
+
+    public attendamce(): void {
+        console.log(`${this.getName()} PRESENTE`);
     }
 
     constructor(
