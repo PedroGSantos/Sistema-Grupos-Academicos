@@ -2,6 +2,9 @@ import { User } from '../users/user.entity';
 import { Department } from '../departments/department.entity';
 import { Student } from '../students/student.entity';
 import { AcademicGroupState } from './state/academic-group-state.entity';
+import { Context } from './strategy/context.strategy';
+import { ListPagination } from './strategy/listPagination.entity';
+import { ListAll } from './strategy/listaAll.entity';
 
 export class AcademicGroup {
     private id!: string;
@@ -14,6 +17,19 @@ export class AcademicGroup {
     private events!: Event[];
     private createdAt!: Date;
     private currentState!: AcademicGroupState;
+    private contextStrategyListGroup!: Context;
+
+    public getContextStrategyListGroup(): Context {
+        return this.contextStrategyListGroup;
+    }
+
+    public setContextStrategyListGroup(strategy: string) {
+        if (strategy === 'paginacao') {
+            this.contextStrategyListGroup.setStrategy(new ListPagination());
+        } else {
+            this.contextStrategyListGroup.setStrategy(new ListAll());
+        }
+    }
 
     public getAcademicGroupState(): AcademicGroupState {
         return this.currentState;
@@ -108,6 +124,7 @@ export class AcademicGroup {
         events: Event[],
         createdAt: Date,
         currentState: AcademicGroupState,
+        context: Context,
     ) {
         this.setId(id);
         this.setName(name);
@@ -119,6 +136,7 @@ export class AcademicGroup {
         this.setEvents(events);
         this.setCreatedAt(createdAt);
         this.setAcademicGroupState(currentState);
+        this.setContextStrategyListGroup(context);
     }
 
     //O parâmetro disciplinesNumber irá mudar. Será necessário fazer uma requisição para os outros sistemas
