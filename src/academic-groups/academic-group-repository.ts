@@ -141,4 +141,40 @@ export class AcademicGroupRepository {
 
         return academicGroup;
     }
+
+    async save(academicGroup: AcademicGroup) {
+        await prismaClient.academicGroup.update({
+            where: {
+                id: academicGroup.getId(),
+            },
+            data: {
+                responsibleId: academicGroup.getResponsible().getId(),
+                currentState: academicGroup.getAcademicGroupState().isActive(),
+                academicGroupHasUser: {
+                    updateMany: [
+                        {
+                            where: {
+                                userId: academicGroup.getResponsible().getId(),
+                            },
+                            data: {
+                                isResponsible: true,
+                            },
+                        },
+                        {
+                            where: {
+                                userId: {
+                                    not: academicGroup.getResponsible().getId(),
+                                },
+                            },
+                            data: {
+                                isResponsible: false,
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+
+        return true;
+    }
 }
