@@ -7,8 +7,8 @@ import {
     AcademicGroup,
     IAcademicGroupConstructor,
 } from './academic-group.entity';
-import { Active } from './state/active.entity';
-import { Inactive } from './state/inactive.entity';
+import { ActiveAcademicGroup } from './state/active.entity';
+import { InactiveAcademicGroup } from './state/inactive.entity';
 
 const prismaClient = new PrismaClient();
 const departmentRepository = new DepartmentRepository();
@@ -31,8 +31,8 @@ export class AcademicGroupRepository {
         const constructorParams: IAcademicGroupConstructor = {
             ...groupFound,
             currentState: groupFound.currentState
-                ? Active.getInstance()
-                : Inactive.getInstance(),
+                ? ActiveAcademicGroup.getInstance()
+                : InactiveAcademicGroup.getInstance(),
         };
 
         const academicGroup = new AcademicGroup({ ...constructorParams });

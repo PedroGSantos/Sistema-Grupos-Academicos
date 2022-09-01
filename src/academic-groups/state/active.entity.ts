@@ -1,8 +1,8 @@
 import { AcademicGroup } from '../academic-group.entity';
 import { AcademicGroupState } from './academic-group-state.entity';
-import { Inactive } from './inactive.entity';
+import { InactiveAcademicGroup } from './inactive.entity';
 
-export class Active extends AcademicGroupState {
+export class ActiveAcademicGroup extends AcademicGroupState {
     private static activeUniqueInstance: AcademicGroupState;
 
     private constructor() {
@@ -10,14 +10,16 @@ export class Active extends AcademicGroupState {
     }
 
     public static getInstance(): AcademicGroupState {
-        if (!Active.activeUniqueInstance) {
-            this.activeUniqueInstance = new Active();
+        if (!ActiveAcademicGroup.activeUniqueInstance) {
+            this.activeUniqueInstance = new ActiveAcademicGroup();
         }
         return this.activeUniqueInstance;
     }
 
     public modifyStatusGroup(academicGroup: AcademicGroup): void {
-        academicGroup.setAcademicGroupState(Inactive.getInstance());
+        academicGroup.setAcademicGroupState(
+            InactiveAcademicGroup.getInstance(),
+        );
     }
 
     public isActive(): boolean {
