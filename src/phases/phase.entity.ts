@@ -1,4 +1,4 @@
-import { Student } from "../../students/student.entity";
+import { Student } from '../students/student.entity';
 
 export class Phase {
     private id!: string;
