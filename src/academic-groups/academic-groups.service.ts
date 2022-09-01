@@ -2,7 +2,6 @@ import { isUUID } from 'class-validator';
 import { Request, Response } from 'express';
 import { ProfessorRepository } from '../professors/professor-repository';
 import { StudentRepository } from '../students/student-repository';
-import { User } from '../users/user.entity';
 import { AcademicGroupRepository } from './academic-group-repository';
 
 const academicGroupRepository = new AcademicGroupRepository();
