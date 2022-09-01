@@ -17,7 +17,7 @@ const professorRepository = new ProfessorRepository();
 const eventRepository = new EventRepository();
 
 export class AcademicGroupRepository {
-    buildConstructorParams(academicGroup: any) {
+    buildConstructorParams(academicGroup: any): IAcademicGroupConstructor {
         const constructorParams: IAcademicGroupConstructor = {
             ...academicGroup,
             currentState: academicGroup.currentState
