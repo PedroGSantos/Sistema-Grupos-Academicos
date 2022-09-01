@@ -13,5 +13,6 @@ export class AcademicGroupController {
 
     public initializeRouter(): void {
         this.router.get(this.path, this.academicGroupService.findById);
+        this.router.post(this.path, this.academicGroupService.create);
     }
 }

@@ -17,6 +17,17 @@ const professorRepository = new ProfessorRepository();
 const eventRepository = new EventRepository();
 
 export class AcademicGroupRepository {
+    buildConstructorParams(academicGroup: any) {
+        const constructorParams: IAcademicGroupConstructor = {
+            ...academicGroup,
+            currentState: academicGroup.currentState
+                ? Active.getInstance()
+                : Inactive.getInstance(),
+        };
+
+        return constructorParams;
+    }
+
     async findById(id: string): Promise<AcademicGroup | undefined> {
         const groupFound = await prismaClient.academicGroup.findUnique({
             where: {
@@ -28,12 +39,7 @@ export class AcademicGroupRepository {
             return;
         }
 
-        const constructorParams: IAcademicGroupConstructor = {
-            ...groupFound,
-            currentState: groupFound.currentState
-                ? Active.getInstance()
-                : Inactive.getInstance(),
-        };
+        const constructorParams = this.buildConstructorParams(groupFound);
 
         const academicGroup = new AcademicGroup({ ...constructorParams });
 
@@ -87,6 +93,51 @@ export class AcademicGroupRepository {
                     academicGroup.setParticipants(students);
                 }
             });
+
+        return academicGroup;
+    }
+
+    async create(
+        name: string,
+        description: string,
+        departmentId: string,
+        responsibleId: string,
+        participantsLimit: number,
+    ) {
+        const department = await departmentRepository.findById(departmentId);
+        if (!department) {
+            return;
+        }
+
+        const studentResponsible = await studentRepository.findById(
+            responsibleId,
+        );
+        const professorResponsible = await professorRepository.findById(
+            responsibleId,
+        );
+        if (!studentResponsible && !professorResponsible) {
+            return;
+        }
+
+        const createdGroup = await prismaClient.academicGroup.create({
+            data: {
+                name: name,
+                description: description,
+                departmentId: departmentId,
+                responsibleId: responsibleId,
+                participantsLimit: participantsLimit,
+                academicGroupHasUser: {
+                    create: {
+                        userId: responsibleId,
+                        isResponsible: true,
+                    },
+                },
+            },
+        });
+
+        const constructorParams = this.buildConstructorParams(createdGroup);
+
+        const academicGroup = new AcademicGroup({ ...constructorParams });
 
         return academicGroup;
     }

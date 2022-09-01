@@ -22,4 +22,24 @@ export class AcademicGroupService {
 
         return response.status(200).send(groupFound);
     }
+
+    async create(request: Request, response: Response) {
+        const {
+            name,
+            description,
+            departmentId,
+            responsibleId,
+            participantsLimit,
+        } = request.body;
+
+        const createdGroup = await academicGroupRepository.create(
+            name,
+            description,
+            departmentId,
+            responsibleId,
+            participantsLimit,
+        );
+
+        return response.status(201).send(createdGroup);
+    }
 }
