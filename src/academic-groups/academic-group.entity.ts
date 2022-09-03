@@ -147,7 +147,7 @@ export class AcademicGroup {
     }
 
     public changeResponsable(user: User): boolean {
-        if (user.getLibraryPendencies() || !this.currentState.isActive()) {
+        if (!this.currentState.isActive()) {
             return false;
         }
 
@@ -167,12 +167,8 @@ export class AcademicGroup {
         console.log(`${this.createdAt} ${this.currentState} ${this.id}`);
     }
 
-    public disableAcademicGroup(user: User): boolean {
-        if (
-            user.getId() != this.getResponsible().getId() ||
-            !this.currentState.isActive()
-        )
-            return false;
+    public disableAcademicGroup(): boolean {
+        if (!this.currentState.isActive()) return false;
 
         this.currentState.modifyStatusGroup(this);
         return true;

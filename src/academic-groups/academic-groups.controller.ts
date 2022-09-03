@@ -13,5 +13,14 @@ export class AcademicGroupController {
 
     public initializeRouter(): void {
         this.router.get(this.path, this.academicGroupService.findById);
+        this.router.post(this.path, this.academicGroupService.create);
+        this.router.patch(
+            `${this.path}/deactivate`,
+            this.academicGroupService.deactivate,
+        );
+        this.router.patch(
+            `${this.path}/changeResponsible`,
+            this.academicGroupService.changeResponsible,
+        );
     }
 }
