@@ -1,4 +1,4 @@
-import { UserState } from './user-state.entity';
+import { UserState } from './state/user-state.entity';
 
 export interface IUserConstructor {
     id?: string;
