@@ -15,6 +15,10 @@ export class AcademicGroupController {
         this.router.get(this.path, this.academicGroupService.findById);
         this.router.post(this.path, this.academicGroupService.create);
         this.router.patch(
+            `${this.path}/addStudent`,
+            this.academicGroupService.addStudent,
+        );
+        this.router.patch(
             `${this.path}/deactivate`,
             this.academicGroupService.deactivate,
         );

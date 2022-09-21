@@ -21,8 +21,8 @@ export class AcademicGroupRepository {
         const constructorParams: IAcademicGroupConstructor = {
             ...academicGroup,
             currentState: academicGroup.currentState
-                ? Active.getInstance()
-                : Inactive.getInstance(),
+                ? ActiveAcademicGroup.getInstance()
+                : InactiveAcademicGroup.getInstance(),
         };
 
         return constructorParams;

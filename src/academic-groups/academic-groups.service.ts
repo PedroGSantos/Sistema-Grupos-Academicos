@@ -101,4 +101,30 @@ export class AcademicGroupService {
 
         return response.status(204).send();
     }
+
+    async addStudent(request: Request, response: Response) {
+        const { academicGroupId, studentId } = request.body;
+
+        const academicGroup = await academicGroupRepository.findById(
+            academicGroupId,
+        );
+
+        if (!academicGroup) {
+            return response
+                .status(404)
+                .json({ error: 'Academic Group not found :(' });
+        }
+
+        const student = await studentRepository.findById(studentId);
+
+        if (!student) {
+            return response.status(404).json({ error: 'Student not found :(' });
+        }
+
+        if (!academicGroup.addStudent(student, 3))
+            return response.status(400).json({ error: 'Student has issues' });
+
+        await academicGroupRepository.save(academicGroup);
+        return response.status(204).send();
+    }
 }

@@ -3,8 +3,8 @@ import {
     AcademicGroup,
     IAcademicGroupConstructor,
 } from '../academic-groups/academic-group.entity';
-import { Active } from '../academic-groups/state/active.entity';
-import { Inactive } from '../academic-groups/state/inactive.entity';
+import { ActiveAcademicGroup } from '../academic-groups/state/active.entity';
+import { InactiveAcademicGroup } from '../academic-groups/state/inactive.entity';
 import { Student, IStudentConstructor } from './student.entity';
 
 const prismaClient = new PrismaClient();
@@ -124,8 +124,8 @@ export class StudentRepository {
                 return {
                     ...academicGroup,
                     currentState: academicGroup.currentState
-                        ? Active.getInstance()
-                        : Inactive.getInstance(),
+                        ? ActiveAcademicGroup.getInstance()
+                        : InactiveAcademicGroup.getInstance(),
                 };
             });
 
