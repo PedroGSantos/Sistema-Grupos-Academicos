@@ -80,4 +80,20 @@ export class StudentService {
 
         return response.status(200).json(studentsFound);
     }
+
+    async create(request: Request, response: Response) {
+        const { name, email, cpf, birthDate, password, department_id } =
+            request.body;
+
+        const createdStudent = await studentRepository.create(
+            name,
+            email,
+            cpf,
+            birthDate,
+            password,
+            department_id,
+        );
+
+        return response.status(201).send(createdStudent);
+    }
 }

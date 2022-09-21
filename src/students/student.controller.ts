@@ -12,6 +12,7 @@ export class StudentController {
     }
 
     public initializeRouter(): void {
+        this.router.post(this.path, this.studentService.create);
         this.router.get(this.path, this.studentService.findById);
         this.router.get(
             `${this.path}/deactivatedGroups`,
