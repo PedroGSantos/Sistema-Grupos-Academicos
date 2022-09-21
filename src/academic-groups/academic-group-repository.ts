@@ -3,6 +3,7 @@ import { DepartmentRepository } from '../departments/department-repository';
 import { EventRepository } from '../events/event-repository';
 import { ProfessorRepository } from '../professors/professor-repository';
 import { StudentRepository } from '../students/student-repository';
+import { Student } from '../students/student.entity';
 import {
     AcademicGroup,
     IAcademicGroupConstructor,
@@ -177,6 +178,53 @@ export class AcademicGroupRepository {
                         },
                     ],
                 },
+            },
+        });
+
+        return true;
+    }
+
+    async saveStudent(academicGroup: AcademicGroup, student: Student) {
+        await prismaClient.academicGroupHasUser.create({
+            data: {
+                academicGroupId: academicGroup.getId(),
+                userId: student.getId(),
+                isResponsible: false,
+            },
+        });
+
+        await prismaClient.academicGroup.update({
+            where: {
+                id: academicGroup.getId(),
+            },
+            data: {
+                academicGroupHasUser: {
+                    updateMany: [
+                        {
+                            where: {
+                                userId: {
+                                    not: academicGroup.getResponsible().getId(),
+                                },
+                            },
+                            data: {
+                                isResponsible: false,
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+
+        return true;
+    }
+
+    async removeStudent(academicGroup: AcademicGroup, student: Student) {
+        await prismaClient.academicGroupHasUser.deleteMany({
+            where: {
+                AND: [
+                    { academicGroupId: academicGroup.getId() },
+                    { userId: student.getId() },
+                ],
             },
         });
 

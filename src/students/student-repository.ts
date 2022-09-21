@@ -16,7 +16,7 @@ export class StudentRepository {
                 id: id,
             },
         });
-
+        console.log(userFound)
         const studentFound = await prismaClient.student.findFirst({
             where: {
                 userId: id,
