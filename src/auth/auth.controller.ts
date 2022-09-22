@@ -13,5 +13,6 @@ export class AuthController {
 
     public initializeRouter(): void {
         this.router.post(this.path, this.authService.auth);
+        this.router.post(`${this.path}/validate`, this.authService.validate);
     }
 }

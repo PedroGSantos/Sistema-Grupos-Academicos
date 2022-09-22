@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -44,6 +44,21 @@ export class AuthService {
         );
 
         return response.status(200).json({ token: token });
+    }
+
+    async validate(request: Request, response: Response) {
+        const token = request.body.token;
+        if (!token)
+            return response
+                .status(401)
+                .json({ auth: false, message: 'No token provided.' });
+
+        verify(token, 'valter', (err: any, decoded: any) => {
+            if (err) {
+                return response.status(401).json({ error: 'Token invalid :(' });
+            }
+            return response.status(200).json({ user_id: decoded.user_id });
+        });
     }
 }
 
