@@ -3,6 +3,7 @@ import { Console } from 'console';
 import { Request, Response } from 'express';
 import { ProfessorRepository } from '../professors/professor-repository';
 import { StudentRepository } from '../students/student-repository';
+import { subjectsQuantity } from '../utils/getSubjects';
 import { AcademicGroupRepository } from './academic-group-repository';
 
 const academicGroupRepository = new AcademicGroupRepository();
@@ -14,7 +15,7 @@ export class AcademicGroupService {
         if (!request?.query?.id || !isUUID(request?.query?.id)) {
             return response.status(400).json({ error: 'Pedido ruim fi' });
         }
-
+        console.log(await subjectsQuantity('544895'));
         const groupFound = await academicGroupRepository.findById(
             request.query.id as string,
         );
@@ -122,9 +123,14 @@ export class AcademicGroupService {
             return response.status(404).json({ error: 'Student not found :(' });
         }
 
-        if (!academicGroup.addStudent(student, 3))
+        if (
+            !academicGroup.addStudent(
+                student,
+                await subjectsQuantity(String(student.getRA())),
+            )
+        )
             return response.status(400).json({ error: 'Student has issues' });
-        console.log('tet');
+
         await academicGroupRepository.saveStudent(academicGroup, student);
         return response.status(204).send();
     }
@@ -143,8 +149,8 @@ export class AcademicGroupService {
         }
 
         const student = await studentRepository.findById(studentId);
-        console.log(studentId)
-        console.log(student)
+        console.log(studentId);
+        console.log(student);
 
         if (!student) {
             return response.status(404).json({ error: 'Student not found :(' });
