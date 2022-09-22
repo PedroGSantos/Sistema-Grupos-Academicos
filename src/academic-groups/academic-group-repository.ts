@@ -281,11 +281,9 @@ export class AcademicGroupRepository {
     }
 
     async findMany(page = 0) {
-        console.log(page);
-
         const academicGroups = await prismaClient.academicGroup.findMany({
-            skip: page - 1 * 5,
-            take: 5,
+            skip: (page - 1) * 2,
+            take: 2,
         });
 
         return academicGroups;

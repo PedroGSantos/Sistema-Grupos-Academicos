@@ -58,11 +58,6 @@ export class AcademicGroupController {
         );
 
         this.router.get(
-            `${this.path}/studentsWith`,
-            this.academicGroupService.findOrganizedEventsById,
-        );
-
-        this.router.get(
             `${this.path}/participantsAcademicGroupsWithSubjects`,
             this.academicGroupService.findParticipantsWithSubjects,
         );
