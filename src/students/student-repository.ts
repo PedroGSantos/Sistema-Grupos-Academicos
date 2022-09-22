@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
 import {
     AcademicGroup,
@@ -5,11 +6,33 @@ import {
 } from '../academic-groups/academic-group.entity';
 import { ActiveAcademicGroup } from '../academic-groups/state/active.entity';
 import { InactiveAcademicGroup } from '../academic-groups/state/inactive.entity';
+import { IUserConstructor } from '../users/user.entity';
 import { Student, IStudentConstructor } from './student.entity';
+import { randomInt } from 'crypto';
 
 const prismaClient = new PrismaClient();
 
 export class StudentRepository {
+    buildStudentConstructorParams(student: any): IStudentConstructor {
+        console.log(student);
+
+        const constructorParams: IStudentConstructor = {
+            ra: student.ra,
+            libraryPendencies: student.libraryPendencies,
+        };
+
+        return constructorParams;
+    }
+
+    buildUserConstructorParams(user: any): IUserConstructor {
+        delete user.student;
+        const constructorParams: IUserConstructor = {
+            ...user,
+        };
+
+        return constructorParams;
+    }
+
     async findById(id: string): Promise<Student | undefined> {
         const userFound = await prismaClient.user.findUnique({
             where: {
@@ -169,5 +192,62 @@ export class StudentRepository {
         });
 
         return students;
+    }
+
+    async create(
+        name: string,
+        email: string,
+        cpf: string,
+        birthDate: string,
+        password: string,
+        department_id: string,
+    ): Promise<Student> {
+        const salt = bcrypt.genSaltSync(10);
+
+        const splitedDate = birthDate.split('/');
+
+        const createdUser = await prismaClient.user.create({
+            data: {
+                name: name,
+                cpf: cpf,
+                email: email,
+                birthDate: new Date(
+                    +splitedDate[2],
+                    +splitedDate[1] - 1,
+                    +splitedDate[0],
+                ),
+                password: bcrypt.hashSync(password, salt),
+                student: {
+                    create: {
+                        ra: randomInt(1, 1000000),
+                        departmentId: department_id,
+                        state: 'active',
+                        libraryPendencies: false,
+                    },
+                },
+            },
+            select: {
+                id: true,
+                name: true,
+                cpf: true,
+                birthDate: true,
+                email: true,
+                password: true,
+                student: true,
+            },
+        });
+
+        const studentConstructorParams = this.buildStudentConstructorParams(
+            createdUser.student[0],
+        );
+        const userConstructorParams =
+            this.buildUserConstructorParams(createdUser);
+
+        const user = new Student(
+            { ...userConstructorParams },
+            { ...studentConstructorParams },
+        );
+
+        return user;
     }
 }
