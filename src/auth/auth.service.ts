@@ -2,6 +2,8 @@ import * as bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
 import { sign } from 'jsonwebtoken';
 import { Request, Response } from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const prismaClient = new PrismaClient();
 
@@ -35,9 +37,9 @@ export class AuthService {
                 user_id: user?.id,
                 cpf: user?.cpf,
             },
-            'secret',
+            process.env.SECRET || 'sct',
             {
-                expiresIn: '1h',
+                expiresIn: '24h',
             },
         );
 
