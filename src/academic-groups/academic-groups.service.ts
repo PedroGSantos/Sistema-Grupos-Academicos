@@ -2,7 +2,6 @@ import { isUUID } from 'class-validator';
 import { Request, Response } from 'express';
 import { EventRepository } from '../events/event-repository';
 import { ProfessorRepository } from '../professors/professor-repository';
-import { apiSubjects } from '../service/apiSubjects';
 import { StudentRepository } from '../students/student-repository';
 import { Student } from '../students/student.entity';
 import { subjectsQuantity } from '../utils/getSubjects';
