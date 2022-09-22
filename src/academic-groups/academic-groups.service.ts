@@ -92,7 +92,7 @@ export class AcademicGroupService {
         const professor = await professorRepository.findById(newResponsibleId);
 
         const newResponsible = student ?? professor;
-        const isStudent = newResponsible typeof Student;
+        const isStudent = newResponsible instanceof Student;
 
         if ()
         if (!newResponsible) {
