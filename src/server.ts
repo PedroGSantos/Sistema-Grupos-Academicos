@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { AcademicGroupController } from './academic-groups/academic-groups.controller';
 import { StudentController } from './students/student.controller';
 import { ProfessorController } from './professors/professor.controller';
+import { EventController } from './events/event-controller';
 import { AuthController } from './auth/auth.controller';
 
 dotenv.config();
@@ -14,6 +15,7 @@ const app = new App(
         new StudentController(),
         new ProfessorController(),
         new AuthController(),
+        new EventController(),
     ],
     port as number,
 );

@@ -26,5 +26,13 @@ export class AcademicGroupController {
             `${this.path}/changeResponsible`,
             this.academicGroupService.changeResponsible,
         );
+        this.router.delete(
+            `${this.path}/removeStudent`,
+            this.academicGroupService.removeStudent,
+        );
+        this.router.patch(
+            `${this.path}/removeStudent`,
+            this.academicGroupService.removeStudent,
+        );
     }
 }

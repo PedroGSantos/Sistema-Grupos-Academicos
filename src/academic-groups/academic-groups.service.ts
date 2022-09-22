@@ -1,4 +1,5 @@
 import { isUUID } from 'class-validator';
+import { Console } from 'console';
 import { Request, Response } from 'express';
 import { ProfessorRepository } from '../professors/professor-repository';
 import { StudentRepository } from '../students/student-repository';
@@ -123,8 +124,36 @@ export class AcademicGroupService {
 
         if (!academicGroup.addStudent(student, 3))
             return response.status(400).json({ error: 'Student has issues' });
+        console.log('tet');
+        await academicGroupRepository.saveStudent(academicGroup, student);
+        return response.status(204).send();
+    }
 
-        await academicGroupRepository.save(academicGroup);
+    async removeStudent(request: Request, response: Response) {
+        const { academicGroupId, studentId } = request.body;
+
+        const academicGroup = await academicGroupRepository.findById(
+            academicGroupId,
+        );
+
+        if (!academicGroup) {
+            return response
+                .status(404)
+                .json({ error: 'Academic Group not found :(' });
+        }
+
+        const student = await studentRepository.findById(studentId);
+        console.log(studentId)
+        console.log(student)
+
+        if (!student) {
+            return response.status(404).json({ error: 'Student not found :(' });
+        }
+
+        if (!academicGroup.removeStudent(student))
+            return response.status(400).json({ error: 'Student has issues' });
+
+        await academicGroupRepository.removeStudent(academicGroup, student);
         return response.status(204).send();
     }
 }
