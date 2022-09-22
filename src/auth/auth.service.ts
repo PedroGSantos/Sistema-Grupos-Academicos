@@ -37,7 +37,7 @@ export class AuthService {
                 user_id: user?.id,
                 cpf: user?.cpf,
             },
-            process.env.SECRET || 'sct',
+            'valter',
             {
                 expiresIn: '24h',
             },

@@ -1,6 +1,6 @@
 import { isUUID } from 'class-validator';
-import { Console } from 'console';
 import { Request, Response } from 'express';
+import { EventRepository } from '../events/event-repository';
 import { ProfessorRepository } from '../professors/professor-repository';
 import { StudentRepository } from '../students/student-repository';
 import { AcademicGroupRepository } from './academic-group-repository';
@@ -8,6 +8,7 @@ import { AcademicGroupRepository } from './academic-group-repository';
 const academicGroupRepository = new AcademicGroupRepository();
 const studentRepository = new StudentRepository();
 const professorRepository = new ProfessorRepository();
+const eventRepository = new EventRepository();
 
 export class AcademicGroupService {
     async findById(request: Request, response: Response) {
@@ -63,8 +64,13 @@ export class AcademicGroupService {
                 .json({ error: 'Academic Group not found :(' });
         }
 
-        if (!groupFound.disableAcademicGroup()) {
+        const disabledCode = groupFound.disableAcademicGroup(
+            request.body.user_id,
+        );
+        if (disabledCode == 2) {
             return response.status(400).json({ error: 'Grupo já desativado' });
+        } else if (disabledCode == 3) {
+            return response.status(403).json({ error: 'Não é o responsável' });
         }
 
         await academicGroupRepository.save(groupFound);
@@ -94,8 +100,14 @@ export class AcademicGroupService {
                 .json({ error: 'Academic Group not found :(' });
         }
 
-        if (!academicGroup.changeResponsable(newResponsible)) {
-            return response.status(400).json({ error: 'Grupo Desativado' });
+        const changedCode = academicGroup.changeResponsable(
+            request.body.user_id,
+            newResponsible,
+        );
+        if (changedCode == 2) {
+            return response.status(400).json({ error: 'Grupo já desativado' });
+        } else if (changedCode == 3) {
+            return response.status(403).json({ error: 'Não é o responsável' });
         }
 
         await academicGroupRepository.save(academicGroup);
@@ -143,17 +155,48 @@ export class AcademicGroupService {
         }
 
         const student = await studentRepository.findById(studentId);
-        console.log(studentId)
-        console.log(student)
+        console.log(studentId);
+        console.log(student);
 
         if (!student) {
             return response.status(404).json({ error: 'Student not found :(' });
         }
 
-        if (!academicGroup.removeStudent(student))
+        const removedCode = academicGroup.removeStudent(
+            request.body.user_id,
+            student,
+        );
+        if (removedCode == 2) {
             return response.status(400).json({ error: 'Student has issues' });
+        } else if (removedCode == 3) {
+            return response.status(403).json({ error: 'Não é o responsável' });
+        }
 
         await academicGroupRepository.removeStudent(academicGroup, student);
         return response.status(204).send();
+    }
+
+    async findInvitedEventsById(request: Request, response: Response) {
+        if (!request?.query?.id || !isUUID(request?.query?.id)) {
+            return response.status(400).json({ error: 'Pedido ruim fi' });
+        }
+
+        const events = await eventRepository.findByInvitedAcademicGroupId(
+            request.query.id as string,
+        );
+
+        return response.status(200).send(events);
+    }
+
+    async findMany(request: Request, response: Response) {
+        if (!request?.query?.name) {
+            return response.status(400).json({ error: 'Pedido ruim fi' });
+        }
+
+        const groupsFound = await academicGroupRepository.findByName(
+            request.query.name as string,
+        );
+
+        return response.status(200).send(groupsFound);
     }
 }

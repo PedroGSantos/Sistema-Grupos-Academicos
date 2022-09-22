@@ -44,7 +44,7 @@ export class EventService {
             }
         }
         console.log(academicGroupsGuestsIds);
-        
+
         const createdGroup = await eventRepository.create(
             name,
             startDate,
@@ -57,5 +57,20 @@ export class EventService {
         );
 
         return response.status(201).send(createdGroup);
+    }
+
+    async update(request: Request, response: Response) {
+        const { event_id, startDate, endDate, addressId, status } =
+            request.body;
+
+        const updatedGroup = await eventRepository.update(
+            event_id,
+            startDate,
+            endDate,
+            addressId,
+            status,
+        );
+
+        return response.status(201).send(updatedGroup);
     }
 }

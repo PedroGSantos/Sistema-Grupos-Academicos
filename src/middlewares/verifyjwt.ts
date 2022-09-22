@@ -12,7 +12,7 @@ export function verifyJwt(
             .status(401)
             .json({ auth: false, message: 'No token provided.' });
 
-    verify(token, process.env.SECRET || 'sct', (err: any, decoded: any) => {
+    verify(token, 'valter', (err: any, decoded: any) => {
         if (err) {
             return response.status(403).json({ error: 'Forbidden :(' });
         }
