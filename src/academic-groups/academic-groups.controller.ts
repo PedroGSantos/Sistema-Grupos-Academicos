@@ -23,7 +23,7 @@ export class AcademicGroupController {
             this.academicGroupService.findMany,
         );
         this.router.post(this.path, this.academicGroupService.create);
-        this.router.patch(
+        this.router.post(
             `${this.path}/addStudent`,
             this.academicGroupService.addStudent,
         );
