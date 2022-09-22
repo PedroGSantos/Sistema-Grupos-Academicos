@@ -45,6 +45,7 @@ export class AcademicGroupRepository {
             currentState: groupFound.currentState
                 ? ActiveAcademicGroup.getInstance()
                 : InactiveAcademicGroup.getInstance(),
+            events: [],
         };
 
         const academicGroup = new AcademicGroup({ ...constructorParams });
@@ -101,6 +102,34 @@ export class AcademicGroupRepository {
             });
 
         return academicGroup;
+    }
+
+    async findByName(name: string): Promise<AcademicGroup[] | undefined> {
+        const groupsFound = await prismaClient.academicGroup.findMany({
+            where: {
+                name: {
+                    contains: name,
+                },
+            },
+        });
+
+        const constructorsParams: IAcademicGroupConstructor[] = groupsFound.map(
+            (groupFound) => {
+                return {
+                    ...groupFound,
+                    currentState: groupFound.currentState
+                        ? ActiveAcademicGroup.getInstance()
+                        : InactiveAcademicGroup.getInstance(),
+                    events: [],
+                };
+            },
+        );
+
+        const academicGroups = constructorsParams.map(
+            (constructorParams) => new AcademicGroup({ ...constructorParams }),
+        );
+
+        return academicGroups;
     }
 
     async create(

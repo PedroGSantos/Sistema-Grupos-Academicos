@@ -13,5 +13,6 @@ export class EventController {
 
     public initializeRouter(): void {
         this.router.post(this.path, this.eventService.create);
+        this.router.patch(this.path, this.eventService.update);
     }
 }

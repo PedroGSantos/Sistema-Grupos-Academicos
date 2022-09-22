@@ -6,12 +6,12 @@ const studentRepository = new StudentRepository();
 
 export class StudentService {
     async findById(request: Request, response: Response) {
-        if (!request?.query?.id || !isUUID(request?.query?.id)) {
+        if (!request?.params?.id || !isUUID(request?.params?.id)) {
             return response.status(400).json({ error: 'Pedido ruim fi' });
         }
 
         const studentFound = await studentRepository.findById(
-            request.query.id as string,
+            request.params.id as string,
         );
 
         if (!studentFound) {

@@ -146,31 +146,40 @@ export class AcademicGroup {
         return true;
     }
 
-    public changeResponsable(user: User): boolean {
+    public changeResponsable(actual_user_id: string, new_user: User): number {
         if (!this.currentState.isActive()) {
-            return false;
+            return 2;
+        }
+        if (this.getResponsible().getId() !== actual_user_id) {
+            return 3;
         }
 
-        this.setResponsible(user);
-        return true;
+        this.setResponsible(new_user);
+        return 1;
     }
 
-    public removeStudent(aluno: Student): boolean {
+    public removeStudent(responsible_id: string, aluno: Student): number {
         if (!this.currentState.isActive()) {
-            return false;
+            return 2;
+        }
+        if (this.getResponsible().getId() != responsible_id) {
+            return 3;
         }
         this.participants.filter((s) => s.getId() == aluno.getId());
-        return true;
+        return 1;
     }
 
     public malucasso() {
         console.log(`${this.createdAt} ${this.currentState} ${this.id}`);
     }
 
-    public disableAcademicGroup(): boolean {
-        if (!this.currentState.isActive()) return false;
+    public disableAcademicGroup(responsible_id: string): number {
+        if (!this.currentState.isActive()) return 2;
+        console.log(this.getResponsible().getId(), responsible_id);
+
+        if (this.getResponsible().getId() !== responsible_id) return 3;
 
         this.currentState.modifyStatusGroup(this);
-        return true;
+        return 1;
     }
 }
