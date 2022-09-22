@@ -8,6 +8,7 @@ export class RecruitmentProcessRepository {
         startDate: string,
         endDate: string,
         opportunitiesNumber: number,
+        subscribesNumber: number,
     ) {
         const splitedStartDate = startDate?.split('/');
         const splitedEndDate = endDate?.split('/');
@@ -27,6 +28,7 @@ export class RecruitmentProcessRepository {
                         +splitedEndDate[2],
                     ),
                     opportunitiesNumber: opportunitiesNumber,
+                    subscribesNumber: subscribesNumber,
                 },
             });
 

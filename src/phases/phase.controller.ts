@@ -13,5 +13,9 @@ export class PhaseController {
 
     public initializeRouter(): void {
         this.router.post(`${this.path}`, this.phaseService.create);
+        this.router.post(
+            `${this.path}/registerStudent`,
+            this.phaseService.registerStudent,
+        );
     }
 }

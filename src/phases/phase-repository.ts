@@ -31,4 +31,16 @@ export class PhaseRepository {
 
         return createdPhase;
     }
+
+    async registerStudent(phase_id: string, ra: number, approved: boolean) {
+        const registeredStudent = await prismaClient.studentOnPhase.create({
+            data: {
+                phaseId: phase_id,
+                studentRa: ra,
+                isApproved: approved,
+            },
+        });
+
+        return registeredStudent;
+    }
 }
