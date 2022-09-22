@@ -39,7 +39,7 @@ export class AuthService {
             },
             process.env.SECRET || 'sct',
             {
-                expiresIn: '1h',
+                expiresIn: '24h',
             },
         );
 
