@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { EventRepository } from '../events/event-repository';
 import { ProfessorRepository } from '../professors/professor-repository';
 import { StudentRepository } from '../students/student-repository';
+import { Student } from '../students/student.entity';
 import { subjectsQuantity } from '../utils/getSubjects';
 import { AcademicGroupRepository } from './academic-group-repository';
 
@@ -91,6 +92,9 @@ export class AcademicGroupService {
         const professor = await professorRepository.findById(newResponsibleId);
 
         const newResponsible = student ?? professor;
+        const isStudent = newResponsible typeof Student;
+
+        if ()
         if (!newResponsible) {
             return response.status(404).json({ error: 'User not found :(' });
         }
