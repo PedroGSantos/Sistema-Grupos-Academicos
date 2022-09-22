@@ -13,5 +13,9 @@ export class RecruitmentProcessController {
 
     public initializeRouter(): void {
         this.router.post(`${this.path}`, this.recruitmentProcessService.create);
+        this.router.get(
+            `${this.path}`,
+            this.recruitmentProcessService.findById,
+        );
     }
 }

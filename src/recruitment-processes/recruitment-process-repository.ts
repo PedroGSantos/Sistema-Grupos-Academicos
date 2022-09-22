@@ -34,4 +34,22 @@ export class RecruitmentProcessRepository {
 
         return createdRecruitmentProcess;
     }
+
+    async findById(id: string) {
+        const recruitmentProcessFound =
+            await prismaClient.recruitmentProcess.findUnique({
+                where: {
+                    id: id,
+                },
+                include: {
+                    phases: {
+                        include: {
+                            participantsAtPhase: true,
+                        },
+                    },
+                },
+            });
+
+        return recruitmentProcessFound;
+    }
 }

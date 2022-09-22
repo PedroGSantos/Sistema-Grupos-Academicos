@@ -1,3 +1,4 @@
+import { isUUID } from 'class-validator';
 import { Request, Response } from 'express';
 import { RecruitmentProcessRepository } from './recruitment-process-repository';
 
@@ -23,5 +24,17 @@ export class RecruitmentProcessService {
             );
 
         return response.status(201).send(createdRecruitmentProcess);
+    }
+
+    async findById(request: Request, response: Response) {
+        if (!request?.query?.id || !isUUID(request?.query?.id)) {
+            return response.status(400).json({ error: 'Pedido ruim fi' });
+        }
+
+        const recruitmentProcess = await recruitmentProcessRepository.findById(
+            request.query.id as string,
+        );
+
+        return response.status(201).send(recruitmentProcess);
     }
 }
