@@ -87,12 +87,13 @@ export class AcademicGroupService {
         const academicGroup = await academicGroupRepository.findById(
             academicGroupId,
         );
-
+        console.log(newResponsibleId);
         const student = await studentRepository.findById(newResponsibleId);
 
         const professor = await professorRepository.findById(newResponsibleId);
 
         const newResponsible = student ?? professor;
+        const isStudent = newResponsible instanceof Student;
 
         if (!newResponsible) {
             return response.status(404).json({ error: 'User not found :(' });
@@ -104,14 +105,27 @@ export class AcademicGroupService {
                 .json({ error: 'Academic Group not found :(' });
         }
 
-        const changedCode = academicGroup.changeResponsable(
-            request.body.user_id,
-            newResponsible,
-        );
+        let changedCode = 1;
+        if (isStudent) {
+            changedCode = academicGroup.changeResponsable(
+                request.body.user_id,
+                newResponsible,
+                await subjectsQuantity(String(student?.getRA())),
+            );
+        } else {
+            changedCode = academicGroup.changeResponsable(
+                request.body.user_id,
+                newResponsible,
+            );
+        }
         if (changedCode == 2) {
             return response.status(400).json({ error: 'Grupo já desativado' });
         } else if (changedCode == 3) {
             return response.status(403).json({ error: 'Não é o responsável' });
+        } else if (changedCode == 4) {
+            return response
+                .status(403)
+                .json({ error: 'Não está inscrito em disciplinas' });
         }
 
         await academicGroupRepository.save(academicGroup);
@@ -199,7 +213,7 @@ export class AcademicGroupService {
         return response.status(200).send(events);
     }
 
-    async findMany(request: Request, response: Response) {
+    async findManyByName(request: Request, response: Response) {
         if (!request?.query?.name) {
             return response.status(400).json({ error: 'Pedido ruim fi' });
         }
@@ -285,5 +299,12 @@ export class AcademicGroupService {
         }
 
         return response.status(200).send(participants);
+    }
+    async findMany(request: Request, response: Response) {
+        const groupsFound = await academicGroupRepository.findMany(
+            parseInt(request?.query?.page?.toString() ?? '1'),
+        );
+
+        return response.status(200).send(groupsFound);
     }
 }

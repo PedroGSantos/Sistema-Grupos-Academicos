@@ -3,9 +3,6 @@ import { Department } from '../departments/department.entity';
 import { Student } from '../students/student.entity';
 import { AcademicGroupState } from './state/academic-group-state.entity';
 import { Event } from '../events/event.entity';
-import { Context } from './strategy/context.strategy';
-import { ListPagination } from './strategy/listPagination.entity';
-import { ListAll } from './strategy/listaAll.entity';
 
 export interface IAcademicGroupConstructor {
     id?: string;
@@ -18,7 +15,6 @@ export interface IAcademicGroupConstructor {
     events?: Event[];
     createdAt?: Date;
     currentState?: AcademicGroupState;
-    contextStrategyListGroup?: Context;
 }
 
 export class AcademicGroup {
@@ -32,19 +28,6 @@ export class AcademicGroup {
     private events!: Event[];
     private createdAt!: Date;
     private currentState!: AcademicGroupState;
-    private contextStrategyListGroup!: Context;
-
-    public getContextStrategyListGroup(): Context {
-        return this.contextStrategyListGroup;
-    }
-
-    public setContextStrategyListGroup(strategy: string) {
-        if (strategy === 'paginacao') {
-            this.contextStrategyListGroup.setStrategy(new ListPagination());
-        } else {
-            this.contextStrategyListGroup.setStrategy(new ListAll());
-        }
-    }
 
     public getAcademicGroupState(): AcademicGroupState {
         return this.currentState;
@@ -146,12 +129,18 @@ export class AcademicGroup {
         return true;
     }
 
-    public changeResponsable(actual_user_id: string, new_user: User): number {
+    public changeResponsable(actual_user_id: string, new_user: User, disciplinesNumber?: number): number {
+        console.log('test')
+        console.log(disciplinesNumber);
         if (!this.currentState.isActive()) {
             return 2;
         }
         if (this.getResponsible().getId() !== actual_user_id) {
             return 3;
+        }
+        console.log("testee")
+        if (disciplinesNumber !== undefined && disciplinesNumber < 3) {
+            return 4;
         }
 
         this.setResponsible(new_user);
@@ -167,10 +156,6 @@ export class AcademicGroup {
         }
         this.participants.filter((s) => s.getId() == aluno.getId());
         return 1;
-    }
-
-    public malucasso() {
-        console.log(`${this.createdAt} ${this.currentState} ${this.id}`);
     }
 
     public disableAcademicGroup(responsible_id: string): number {
