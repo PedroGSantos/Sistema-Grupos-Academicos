@@ -259,4 +259,15 @@ export class AcademicGroupRepository {
 
         return true;
     }
+
+    async findMany(page = 0) {
+        console.log(page);
+
+        const academicGroups = await prismaClient.academicGroup.findMany({
+            skip: page - 1 * 5,
+            take: 5,
+        });
+
+        return academicGroups;
+    }
 }
