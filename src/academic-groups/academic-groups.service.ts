@@ -94,7 +94,6 @@ export class AcademicGroupService {
         const newResponsible = student ?? professor;
         const isStudent = newResponsible instanceof Student;
 
-        if ()
         if (!newResponsible) {
             return response.status(404).json({ error: 'User not found :(' });
         }
