@@ -42,5 +42,25 @@ export class AcademicGroupController {
             `${this.path}/invitedEvents`,
             this.academicGroupService.findInvitedEventsById,
         );
+
+        this.router.get(
+            `${this.path}/participants`,
+            this.academicGroupService.findParticipantsById,
+        );
+
+        this.router.get(
+            `${this.path}/organizedEvents`,
+            this.academicGroupService.findOrganizedEventsById,
+        );
+
+        this.router.get(
+            `${this.path}/studentsWith`,
+            this.academicGroupService.findOrganizedEventsById,
+        );
+
+        this.router.get(
+            `${this.path}/participantsAcademicGroupsWithSubjects`,
+            this.academicGroupService.findParticipantsWithSubjects,
+        );
     }
 }

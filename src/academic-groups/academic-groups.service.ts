@@ -2,6 +2,7 @@ import { isUUID } from 'class-validator';
 import { Request, Response } from 'express';
 import { EventRepository } from '../events/event-repository';
 import { ProfessorRepository } from '../professors/professor-repository';
+import { apiSubjects } from '../service/apiSubjects';
 import { StudentRepository } from '../students/student-repository';
 import { Student } from '../students/student.entity';
 import { subjectsQuantity } from '../utils/getSubjects';
@@ -92,7 +93,6 @@ export class AcademicGroupService {
         const professor = await professorRepository.findById(newResponsibleId);
 
         const newResponsible = student ?? professor;
-        const isStudent = newResponsible instanceof Student;
 
         if (!newResponsible) {
             return response.status(404).json({ error: 'User not found :(' });
@@ -176,7 +176,9 @@ export class AcademicGroupService {
             student,
         );
         if (removedCode == 2) {
-            return response.status(400).json({ error: 'Student has issues' });
+            return response
+                .status(400)
+                .json({ error: 'Grupo está desativado' });
         } else if (removedCode == 3) {
             return response.status(403).json({ error: 'Não é o responsável' });
         }
@@ -207,5 +209,81 @@ export class AcademicGroupService {
         );
 
         return response.status(200).send(groupsFound);
+    }
+
+    async findParticipantsById(request: Request, response: Response) {
+        if (!request?.query?.id || !isUUID(request?.query?.id)) {
+            return response.status(400).json({ error: 'Pedido ruim fi' });
+        }
+        const academicGroupId = request?.query?.id as string;
+
+        const academicGroup = await academicGroupRepository.findById(
+            academicGroupId,
+        );
+
+        if (!academicGroup) {
+            return response
+                .status(404)
+                .json({ error: 'Academic Group not found :(' });
+        }
+
+        const participants = await academicGroupRepository.findParticipantsById(
+            request.query.id as string,
+        );
+
+        return response.status(200).send(participants);
+    }
+
+    async findOrganizedEventsById(request: Request, response: Response) {
+        if (!request?.query?.id || !isUUID(request?.query?.id)) {
+            return response.status(400).json({ error: 'Pedido ruim fi' });
+        }
+
+        const events = await eventRepository.findByOrganizerAcademicGroupId(
+            request.query.id as string,
+        );
+
+        return response.status(200).send(events);
+    }
+
+    async findParticipantsWithSubjects(request: Request, response: Response) {
+        if (!request?.query?.id || !isUUID(request?.query?.id)) {
+            return response.status(400).json({ error: 'Pedido ruim fi' });
+        }
+
+        const academicGroup = await academicGroupRepository.findById(
+            request.query.id as string,
+        );
+
+        if (!academicGroup) {
+            return response
+                .status(404)
+                .json({ error: 'Academic Group not found :(' });
+        }
+
+        if (!academicGroup.getAcademicGroupState().isActive()) {
+            return response
+                .status(404)
+                .json({ error: 'Academic Group is not active :(' });
+        }
+
+        const participants = [];
+
+        for (let i = 0; i < academicGroup.getParticipants().length; i++) {
+            const student = await studentRepository.findById(
+                academicGroup.getParticipants()[i].getId(),
+            );
+
+            console.log(student?.getRA());
+            const subjectsNumber = await subjectsQuantity(
+                String(student?.getRA()),
+            );
+
+            if (subjectsNumber >= 2) {
+                participants.push(academicGroup.getParticipants()[i]);
+            }
+        }
+
+        return response.status(200).send(participants);
     }
 }
