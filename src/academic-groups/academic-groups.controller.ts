@@ -16,6 +16,10 @@ export class AcademicGroupController {
         this.router.get(this.path, this.academicGroupService.findById);
         this.router.get(
             `${this.path}/byName`,
+            this.academicGroupService.findManyByName,
+        );
+        this.router.get(
+            `${this.path}/list`,
             this.academicGroupService.findMany,
         );
         this.router.post(this.path, this.academicGroupService.create);

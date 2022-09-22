@@ -197,13 +197,21 @@ export class AcademicGroupService {
         return response.status(200).send(events);
     }
 
-    async findMany(request: Request, response: Response) {
+    async findManyByName(request: Request, response: Response) {
         if (!request?.query?.name) {
             return response.status(400).json({ error: 'Pedido ruim fi' });
         }
 
         const groupsFound = await academicGroupRepository.findByName(
             request.query.name as string,
+        );
+
+        return response.status(200).send(groupsFound);
+    }
+
+    async findMany(request: Request, response: Response) {
+        const groupsFound = await academicGroupRepository.findMany(
+            parseInt(request?.query?.page?.toString() ?? '1'),
         );
 
         return response.status(200).send(groupsFound);
