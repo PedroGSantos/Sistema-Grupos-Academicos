@@ -129,8 +129,12 @@ export class AcademicGroup {
         return true;
     }
 
-    public changeResponsable(actual_user_id: string, new_user: User, disciplinesNumber?: number): number {
-        console.log('test')
+    public changeResponsable(
+        actual_user_id: string,
+        new_user: User,
+        disciplinesNumber?: number,
+    ): number {
+        console.log('test');
         console.log(disciplinesNumber);
         if (!this.currentState.isActive()) {
             return 2;
@@ -138,7 +142,7 @@ export class AcademicGroup {
         if (this.getResponsible().getId() !== actual_user_id) {
             return 3;
         }
-        console.log("testee")
+        console.log('testee');
         if (disciplinesNumber !== undefined && disciplinesNumber < 3) {
             return 4;
         }
