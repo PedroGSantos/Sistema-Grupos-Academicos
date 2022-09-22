@@ -17,7 +17,6 @@ export class AuthService {
             },
             select: {
                 id: true,
-                cpf: true,
                 password: true,
             },
         });
@@ -35,7 +34,6 @@ export class AuthService {
         const token = sign(
             {
                 user_id: user?.id,
-                cpf: user?.cpf,
             },
             'valter',
             {
