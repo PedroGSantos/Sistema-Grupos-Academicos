@@ -19,7 +19,7 @@ export class StudentController {
             this.studentService.findStudentsInDeactivatedAcademicGroups,
         );
         this.router.get(
-            `${this.path}/activeGroups/:ra`,
+            `${this.path}/:ra/activeGroups`,
             this.studentService.findStudentAcademicGroups,
         );
         this.router.get(
