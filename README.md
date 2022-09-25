@@ -14,7 +14,7 @@ Sistema voltado para operações de inclusão,listagem, alteração e remoção 
 
 - Por fim, rode o comando ```npm start``` para executar o servidor.
 
-- Para teste das rotas, baixe o Insomnia pelo seguinte link: https://insomnia.rest/download. Após isso, abra o arquivo Insomnia_template.json dentro do Insomnia, todas as rotas ja estarão listadas e configuradas. Certifique-se de estar usando as variáveis corretas: GA para requisitar a API em deploy, Local para requisições locais no servidor em execução pelo ```npm start```. Algumas rotas exigirão um login, para isso basta acessar a rota de login e enviar o token nas outras rotas, para isso adicione o campo no header da requisição com chave token e valor obtido no login.
+- Para teste das rotas, baixe o Insomnia pelo seguinte link: https://insomnia.rest/download. Após isso, importe o arquivo Insomnia_template.json no Insomnia, todas as rotas ja estarão listadas e configuradas. Certifique-se de estar usando as variáveis corretas: GA para requisitar a API em deploy, Local para requisições locais no servidor em execução pelo ```npm start```. Algumas rotas exigirão um login, para isso basta acessar a rota de login e enviar o token nas outras rotas, para isso adicione o campo no header da requisição com chave token e valor obtido no login.
   - Seleção de ambiente para variáveis do insomnia no canto superior esquerdo
    
   ![image](https://user-images.githubusercontent.com/37910255/192169675-32d1bc35-efea-4fa0-b274-1a28a5c4744e.png)
