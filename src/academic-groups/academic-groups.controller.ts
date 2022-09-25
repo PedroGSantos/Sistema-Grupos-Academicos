@@ -23,14 +23,14 @@ export class AcademicGroupController {
     async findManyByName(request: Request, response: Response) {
         return await academicGroupService
             .findById(request.query.name as string)
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((groupsFound) => response.status(200).send(groupsFound))
             .catch((error) => handleError(response, error));
     }
 
     async findMany(request: Request, response: Response) {
         return await academicGroupService
             .findById(request.query.page as string)
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((groupsFound) => response.status(200).send(groupsFound))
             .catch((error) => handleError(response, error));
     }
 
@@ -50,7 +50,7 @@ export class AcademicGroupController {
     async addStudent(request: Request, response: Response) {
         return await academicGroupService
             .addStudent(request.body.academicGroupId, request.body.studentId)
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then(() => response.status(204).send())
             .catch((error) => handleError(response, error));
     }
 
@@ -68,7 +68,7 @@ export class AcademicGroupController {
                 request.body.newResponsibleId,
                 request.body.user_id,
             )
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then(() => response.status(204).send())
             .catch((error) => handleError(response, error));
     }
 
@@ -79,35 +79,35 @@ export class AcademicGroupController {
                 request.body.studentId,
                 request.body.user_id,
             )
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then(() => response.status(204).send())
             .catch((error) => handleError(response, error));
     }
 
     async findInvitedEventsById(request: Request, response: Response) {
         return await academicGroupService
             .findInvitedEventsById(request.query.id as string)
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((events) => response.status(200).send(events))
             .catch((error) => handleError(response, error));
     }
 
     async findParticipantsById(request: Request, response: Response) {
         return await academicGroupService
             .findById(request.query.id as string)
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((participants) => response.status(200).send(participants))
             .catch((error) => handleError(response, error));
     }
 
     async findOrganizedEventsById(request: Request, response: Response) {
         return await academicGroupService
             .findById(request.query.id as string)
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((events) => response.status(200).send(events))
             .catch((error) => handleError(response, error));
     }
 
     async findParticipantsWithSubjects(request: Request, response: Response) {
         return await academicGroupService
             .findById(request.query.id as string)
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((students) => response.status(200).send(students))
             .catch((error) => handleError(response, error));
     }
 

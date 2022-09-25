@@ -24,7 +24,7 @@ export class EventController {
                 request.query.academicGroupsOrganizersIds as string[],
                 request.query.academicGroupsGuestsIds as string[],
             )
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((createdEvent) => response.status(201).send(createdEvent))
             .catch((error) => handleError(response, error));
     }
 
@@ -37,7 +37,7 @@ export class EventController {
                 request.query.addressId as string,
                 request.query.status as string,
             )
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((updatedEvent) => response.status(200).send(updatedEvent))
             .catch((error) => handleError(response, error));
     }
 

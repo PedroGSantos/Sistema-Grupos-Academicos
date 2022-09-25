@@ -21,14 +21,18 @@ export class RecruitmentProcessController {
                 request.body.opportunitiesNumber,
                 request.body.subscribesNumber,
             )
-            .then((groupFound) => response.status(200).json(groupFound))
+            .then((createdRecruitmentProcess) =>
+                response.status(201).json(createdRecruitmentProcess),
+            )
             .catch((error) => handleError(response, error));
     }
 
     async findById(request: Request, response: Response) {
         return await recruitmentProcessService
             .findById(request.query.id as string)
-            .then((groupFound) => response.status(200).json(groupFound))
+            .then((recruitmentProcessFound) =>
+                response.status(200).json(recruitmentProcessFound),
+            )
             .catch((error) => handleError(response, error));
     }
 

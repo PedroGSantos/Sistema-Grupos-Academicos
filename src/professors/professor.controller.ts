@@ -15,7 +15,7 @@ export class ProfessorController {
     async findProfessorsInDeactivatedAcademicGroups(response: Response) {
         return await professorService
             .findProfessorsInDeactivatedAcademicGroups()
-            .then((groupFound) => response.status(200).json(groupFound))
+            .then((professors) => response.status(200).json(professors))
             .catch((error) => handleError(response, error));
     }
 

@@ -15,14 +15,14 @@ export class StudentController {
     async findById(request: Request, response: Response) {
         return await studentService
             .findById(request.query.id as string)
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((studentFound) => response.status(200).send(studentFound))
             .catch((error) => handleError(response, error));
     }
 
     async findStudentAcademicGroups(request: Request, response: Response) {
         return await studentService
             .findStudentAcademicGroups(parseInt(request.params.ra))
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((groupsFound) => response.status(200).send(groupsFound))
             .catch((error) => handleError(response, error));
     }
 
@@ -32,14 +32,14 @@ export class StudentController {
     ) {
         return await studentService
             .findStudentAcademicGroupsHistory(parseInt(request.params.ra))
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((groupsFound) => response.status(200).send(groupsFound))
             .catch((error) => handleError(response, error));
     }
 
     async findStudentsInDeactivatedAcademicGroups(response: Response) {
         return await studentService
             .findStudentsInDeactivatedAcademicGroups()
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((students) => response.status(200).send(students))
             .catch((error) => handleError(response, error));
     }
 
@@ -53,7 +53,7 @@ export class StudentController {
                 request.body.password,
                 request.body.department_id,
             )
-            .then((groupFound) => response.status(200).send(groupFound))
+            .then((createdStudent) => response.status(201).send(createdStudent))
             .catch((error) => handleError(response, error));
     }
 

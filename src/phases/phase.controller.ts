@@ -20,7 +20,7 @@ export class PhaseController {
                 request.body.startDate,
                 request.body.endDate,
             )
-            .then((groupFound) => response.status(200).json(groupFound))
+            .then((createdPhase) => response.status(201).json(createdPhase))
             .catch((error) => handleError(response, error));
     }
 
@@ -31,7 +31,7 @@ export class PhaseController {
                 request.body.ra,
                 request.body.approved,
             )
-            .then((groupFound) => response.status(200).json(groupFound))
+            .then((registered) => response.status(204).json(registered))
             .catch((error) => handleError(response, error));
     }
 
