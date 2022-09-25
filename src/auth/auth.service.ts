@@ -39,7 +39,7 @@ export class AuthService {
             },
         );
 
-        return token;
+        return { token: token };
     }
 
     async validate(token: string) {
@@ -48,7 +48,7 @@ export class AuthService {
         verify(token, 'valter', (err: any, decoded: any) => {
             if (err) throw new UnauthorizedException('Invalid token :(');
 
-            return decoded.user_id;
+            return { user_id: decoded.user_id };
         });
     }
 }

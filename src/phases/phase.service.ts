@@ -1,12 +1,14 @@
-import { Request, Response } from 'express';
 import { PhaseRepository } from './phase-repository';
 
 const phaseRepository = new PhaseRepository();
 
 export class PhaseService {
-    async create(request: Request, response: Response) {
-        const { recruitmentProcessId, name, startDate, endDate } = request.body;
-
+    async create(
+        recruitmentProcessId: string,
+        name: string,
+        startDate: string,
+        endDate: string,
+    ) {
         const createdPhase = await phaseRepository.create(
             recruitmentProcessId,
             name,
@@ -14,18 +16,16 @@ export class PhaseService {
             endDate,
         );
 
-        return response.status(201).send(createdPhase);
+        return createdPhase;
     }
 
-    async registerStudent(request: Request, response: Response) {
-        const { phase_id, ra, approved } = request.body;
-
+    async registerStudent(phase_id: string, ra: number, approved: boolean) {
         const registeredStudent = await phaseRepository.registerStudent(
             phase_id,
             ra,
             approved,
         );
 
-        return response.status(201).send(registeredStudent);
+        return registeredStudent;
     }
 }

@@ -1,9 +1,10 @@
 import { ProfessorService } from './professor.service';
-import { Router } from 'express';
+import { Response, Router } from 'express';
+import { handleError } from '../errors/handle-error';
+
+const professorService = new ProfessorService();
 
 export class ProfessorController {
-    private professorService = new ProfessorService();
-
     public path = '/professors';
     public router = Router();
 
@@ -11,10 +12,17 @@ export class ProfessorController {
         this.initializeRouter();
     }
 
+    async findProfessorsInDeactivatedAcademicGroups(response: Response) {
+        return await professorService
+            .findProfessorsInDeactivatedAcademicGroups()
+            .then((groupFound) => response.status(200).json(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
     public initializeRouter(): void {
         this.router.get(
             `${this.path}/deactivatedGroups`,
-            this.professorService.findProfessorsInDeactivatedAcademicGroups,
+            this.findProfessorsInDeactivatedAcademicGroups,
         );
     }
 }

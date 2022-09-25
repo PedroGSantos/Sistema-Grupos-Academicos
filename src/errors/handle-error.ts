@@ -16,5 +16,7 @@ export function handleError(response: Response, error: Error) {
         return response.status(404).json({ error: error.message });
     } else if (error instanceof BadGatewayException) {
         return response.status(502).json({ error: error.message });
+    } else {
+        return response.status(502).json({ error: 'Unexpected error' });
     }
 }

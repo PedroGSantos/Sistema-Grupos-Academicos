@@ -1,9 +1,10 @@
 import { PhaseService } from './phase.service';
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
+import { handleError } from '../errors/handle-error';
+
+const phaseService = new PhaseService();
 
 export class PhaseController {
-    private phaseService = new PhaseService();
-
     public path = '/phase';
     public router = Router();
 
@@ -11,11 +12,31 @@ export class PhaseController {
         this.initializeRouter();
     }
 
+    async create(request: Request, response: Response) {
+        return await phaseService
+            .create(
+                request.body.recruitmentProcessId,
+                request.body.name,
+                request.body.startDate,
+                request.body.endDate,
+            )
+            .then((groupFound) => response.status(200).json(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async registerStudent(request: Request, response: Response) {
+        return await phaseService
+            .registerStudent(
+                request.body.phase_id,
+                request.body.ra,
+                request.body.approved,
+            )
+            .then((groupFound) => response.status(200).json(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
     public initializeRouter(): void {
-        this.router.post(`${this.path}`, this.phaseService.create);
-        this.router.post(
-            `${this.path}/registerStudent`,
-            this.phaseService.registerStudent,
-        );
+        this.router.post(`${this.path}`, this.create);
+        this.router.post(`${this.path}/registerStudent`, this.registerStudent);
     }
 }

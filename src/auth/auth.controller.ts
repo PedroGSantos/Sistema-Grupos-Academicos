@@ -2,9 +2,9 @@ import { Request, Response, Router } from 'express';
 import { handleError } from '../errors/handle-error';
 import { AuthService } from './auth.service';
 
-export class AuthController {
-    private authService = new AuthService();
+const authService = new AuthService();
 
+export class AuthController {
     public path = '/auth';
     public router = Router();
 
@@ -13,16 +13,16 @@ export class AuthController {
     }
 
     async auth(request: Request, response: Response) {
-        return await this.authService
+        return await authService
             .auth(request.body.cpf, request.body.password)
-            .then((token) => response.status(200).json({ token: token }))
+            .then((token) => response.status(200).json(token))
             .catch((error) => handleError(response, error));
     }
 
     async validate(request: Request, response: Response) {
-        return await this.authService
+        return await authService
             .validate(request.body.token)
-            .then((user_id) => response.status(200).json({ user_id: user_id }))
+            .then((user_id) => response.status(200).json(user_id))
             .catch((error) => handleError(response, error));
     }
 
