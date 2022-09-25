@@ -8,7 +8,7 @@ Sistema voltado para operações de inclusão,listagem, alteração e remoção 
 
 - Instale o framework node pelo seguinte link: https://nodejs.org/en/
 
-- Com o repositório baixado na máquina, execute o comando ```npm install``` para instalação das bibliotecas.
+- Com o repositório clonado, e com o terminal aberto na pasta do projeto, execute o comando ```npm install``` para instalação das bibliotecas.
 
 - Após a instalação das bibliotecas, crie um arquivo chamado .env com a seguinte variável de ambiente (sabemos que não se expõe esses dados do banco publicamente, mas está aqui para facilitar) ```DATABASE_URL="postgresql://doadmin:AVNS_ujaGrEgwe2HRpConC_Y@banco-dos-brabo-do-user-12479900-0.b.db.ondigitalocean.com:25060/defaultdb?schema=public"```
 
