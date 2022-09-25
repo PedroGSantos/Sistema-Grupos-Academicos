@@ -1,6 +1,7 @@
 import { AcademicGroupService } from './academic-groups.service';
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { verifyJwt } from '../middlewares/verifyjwt';
+import { handleError } from '../errors/handle-error';
 
 export class AcademicGroupController {
     private academicGroupService = new AcademicGroupService();
@@ -10,6 +11,96 @@ export class AcademicGroupController {
 
     constructor() {
         this.initializeRouter();
+    }
+
+    async findById(request: Request, response: Response) {
+        return await this.academicGroupService
+            .findById(request.query.id as string)
+            .then((groupFound) => response.status(200).send(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async findManyByName(request: Request, response: Response) {
+        return await this.academicGroupService
+            .findById(request.query.id as string)
+            .then((groupFound) => response.status(200).send(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async findMany(request: Request, response: Response) {
+        return await this.academicGroupService
+            .findById(request.query.id as string)
+            .then((groupFound) => response.status(200).send(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async create(request: Request, response: Response) {
+        return await this.academicGroupService
+            .create(
+                request.query.name as string,
+                request.query.description as string,
+                request.query.departmentId as string,
+                request.query.responsibleId as string,
+                parseInt(request.query.participantsLimit as string),
+            )
+            .then((groupFound) => response.status(201).send(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async addStudent(request: Request, response: Response) {
+        return await this.academicGroupService
+            .findById(request.query.id as string)
+            .then((groupFound) => response.status(200).send(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async deactivate(request: Request, response: Response) {
+        return await this.academicGroupService
+            .deactivate(request.query.id as string, request.body.user_id)
+            .then(() => response.status(204).send())
+            .catch((error) => handleError(response, error));
+    }
+
+    async changeResponsible(request: Request, response: Response) {
+        return await this.academicGroupService
+            .findById(request.query.id as string)
+            .then((groupFound) => response.status(200).send(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async removeStudent(request: Request, response: Response) {
+        return await this.academicGroupService
+            .findById(request.query.id as string)
+            .then((groupFound) => response.status(200).send(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async findInvitedEventsById(request: Request, response: Response) {
+        return await this.academicGroupService
+            .findById(request.query.id as string)
+            .then((groupFound) => response.status(200).send(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async findParticipantsById(request: Request, response: Response) {
+        return await this.academicGroupService
+            .findById(request.query.id as string)
+            .then((groupFound) => response.status(200).send(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async findOrganizedEventsById(request: Request, response: Response) {
+        return await this.academicGroupService
+            .findById(request.query.id as string)
+            .then((groupFound) => response.status(200).send(groupFound))
+            .catch((error) => handleError(response, error));
+    }
+
+    async findParticipantsWithSubjects(request: Request, response: Response) {
+        return await this.academicGroupService
+            .findById(request.query.id as string)
+            .then((groupFound) => response.status(200).send(groupFound))
+            .catch((error) => handleError(response, error));
     }
 
     public initializeRouter(): void {
@@ -22,7 +113,7 @@ export class AcademicGroupController {
             `${this.path}/list`,
             this.academicGroupService.findMany,
         );
-        this.router.post(this.path, this.academicGroupService.create);
+        this.router.post(this.path, this.create);
         this.router.post(
             `${this.path}/addStudent`,
             this.academicGroupService.addStudent,
@@ -30,7 +121,7 @@ export class AcademicGroupController {
         this.router.patch(
             `${this.path}/deactivate`,
             verifyJwt,
-            this.academicGroupService.deactivate,
+            this.deactivate,
         );
         this.router.patch(
             `${this.path}/changeResponsible`,

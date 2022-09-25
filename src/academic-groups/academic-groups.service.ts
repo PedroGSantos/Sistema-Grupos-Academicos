@@ -1,5 +1,9 @@
 import { isUUID } from 'class-validator';
 import { Request, Response } from 'express';
+import { BadGatewayException } from '../errors/bad-gateway';
+import { BadRequestException } from '../errors/bad-request';
+import { ForbiddenException } from '../errors/forbidden';
+import { NotFoundException } from '../errors/not-found';
 import { EventRepository } from '../events/event-repository';
 import { ProfessorRepository } from '../professors/professor-repository';
 import { StudentRepository } from '../students/student-repository';
@@ -13,33 +17,27 @@ const professorRepository = new ProfessorRepository();
 const eventRepository = new EventRepository();
 
 export class AcademicGroupService {
-    async findById(request: Request, response: Response) {
-        if (!request?.query?.id || !isUUID(request?.query?.id)) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async findById(id: string) {
+        if (!id || !isUUID(id)) {
+            throw new BadRequestException('Invalid id :(');
         }
         console.log(await subjectsQuantity('544895'));
-        const groupFound = await academicGroupRepository.findById(
-            request.query.id as string,
-        );
+        const groupFound = await academicGroupRepository.findById(id);
 
         if (!groupFound) {
-            return response
-                .status(404)
-                .json({ error: 'Academic Group not found :(' });
+            throw new NotFoundException('Academic Group not found :(');
         }
 
-        return response.status(200).send(groupFound);
+        return groupFound;
     }
 
-    async create(request: Request, response: Response) {
-        const {
-            name,
-            description,
-            departmentId,
-            responsibleId,
-            participantsLimit,
-        } = request.body;
-
+    async create(
+        name: string,
+        description: string,
+        departmentId: string,
+        responsibleId: string,
+        participantsLimit: number,
+    ) {
         const createdGroup = await academicGroupRepository.create(
             name,
             description,
@@ -48,36 +46,35 @@ export class AcademicGroupService {
             participantsLimit,
         );
 
-        return response.status(201).send(createdGroup);
+        if (!createdGroup) {
+            throw new BadGatewayException('Unmapped error occured :(');
+        }
+
+        return createdGroup;
     }
 
-    async deactivate(request: Request, response: Response) {
-        if (!request?.body?.id || !isUUID(request?.body?.id)) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async deactivate(id: string, user_id: string) {
+        if (!id || !isUUID(id)) {
+            throw new BadRequestException('Invalid id :(');
         }
 
-        const groupFound = await academicGroupRepository.findById(
-            request.body.id as string,
-        );
+        const groupFound = await academicGroupRepository.findById(id as string);
 
         if (!groupFound) {
-            return response
-                .status(404)
-                .json({ error: 'Academic Group not found :(' });
+            throw new NotFoundException('Academic Group not found :(');
         }
 
-        const disabledCode = groupFound.disableAcademicGroup(
-            request.body.user_id,
-        );
+        const disabledCode = groupFound.disableAcademicGroup(user_id);
+
         if (disabledCode == 2) {
-            return response.status(400).json({ error: 'Grupo já desativado' });
+            throw new BadRequestException('Grupo já desativado');
         } else if (disabledCode == 3) {
-            return response.status(403).json({ error: 'Não é o responsável' });
+            throw new ForbiddenException('Não é o responsável');
         }
 
         await academicGroupRepository.save(groupFound);
 
-        return response.status(204).send();
+        return true;
     }
 
     async changeResponsible(request: Request, response: Response) {

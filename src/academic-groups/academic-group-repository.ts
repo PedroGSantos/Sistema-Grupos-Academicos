@@ -4,7 +4,6 @@ import { EventRepository } from '../events/event-repository';
 import { ProfessorRepository } from '../professors/professor-repository';
 import { StudentRepository } from '../students/student-repository';
 import { Student } from '../students/student.entity';
-import { IUserConstructor, User } from '../users/user.entity';
 import {
     AcademicGroup,
     IAcademicGroupConstructor,
