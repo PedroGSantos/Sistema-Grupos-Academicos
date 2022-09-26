@@ -22,14 +22,14 @@ export class AcademicGroupController {
 
     async findManyByName(request: Request, response: Response) {
         return await academicGroupService
-            .findById(request.query.name as string)
+            .findManyByName(request.query.name as string)
             .then((groupsFound) => response.status(200).send(groupsFound))
             .catch((error) => handleError(response, error));
     }
 
     async findMany(request: Request, response: Response) {
         return await academicGroupService
-            .findById(request.query.page as string)
+            .findMany(request.query.page as string)
             .then((groupsFound) => response.status(200).send(groupsFound))
             .catch((error) => handleError(response, error));
     }
@@ -92,21 +92,28 @@ export class AcademicGroupController {
 
     async findParticipantsById(request: Request, response: Response) {
         return await academicGroupService
-            .findById(request.query.id as string)
+            .findParticipantsById(request.query.id as string)
             .then((participants) => response.status(200).send(participants))
             .catch((error) => handleError(response, error));
     }
 
     async findOrganizedEventsById(request: Request, response: Response) {
         return await academicGroupService
-            .findById(request.query.id as string)
+            .findOrganizedEventsById(request.query.id as string)
             .then((events) => response.status(200).send(events))
             .catch((error) => handleError(response, error));
     }
 
     async findParticipantsWithSubjects(request: Request, response: Response) {
         return await academicGroupService
-            .findById(request.query.id as string)
+            .findParticipantsWithSubjects(request.query.id as string)
+            .then((students) => response.status(200).send(students))
+            .catch((error) => handleError(response, error));
+    }
+
+    async findParticipantsWithPendencies(request: Request, response: Response) {
+        return await academicGroupService
+            .findParticipantsWithPendencies(request.query.id as string)
             .then((students) => response.status(200).send(students))
             .catch((error) => handleError(response, error));
     }
@@ -147,6 +154,11 @@ export class AcademicGroupController {
         this.router.get(
             `${this.path}/participantsAcademicGroupsWithSubjects`,
             this.findParticipantsWithSubjects,
+        );
+
+        this.router.get(
+            `${this.path}/participantsAcademicGroupsWithPendencies`,
+            this.findParticipantsWithPendencies,
         );
     }
 }

@@ -9,6 +9,7 @@ import { subjectsQuantity } from '../utils/getSubjects';
 import { StudentRepository } from '../students/student-repository';
 import { ProfessorRepository } from '../professors/professor-repository';
 import { AcademicGroupRepository } from './academic-group-repository';
+import { libraryPendenciesQuantity } from '../utils/getPendencies';
 
 const academicGroupRepository = new AcademicGroupRepository();
 const studentRepository = new StudentRepository();
@@ -259,7 +260,6 @@ export class AcademicGroupService {
                 academicGroup.getParticipants()[i].getId(),
             );
 
-            console.log(student?.getRA());
             const subjectsNumber = await subjectsQuantity(
                 String(student?.getRA()),
             );
@@ -271,6 +271,41 @@ export class AcademicGroupService {
 
         return participants;
     }
+
+    async findParticipantsWithPendencies(id: string) {
+        if (!id || !isUUID(id)) {
+            throw new BadRequestException('Requisição mal formulada');
+        }
+
+        const academicGroup = await academicGroupRepository.findById(id);
+
+        if (!academicGroup) {
+            throw new NotFoundException('Academic Group not found :(');
+        }
+
+        if (!academicGroup.getAcademicGroupState().isActive()) {
+            throw new BadRequestException('Academic Group is not active :(');
+        }
+
+        const participants = [];
+
+        for (let i = 0; i < academicGroup.getParticipants().length; i++) {
+            const student = await studentRepository.findById(
+                academicGroup.getParticipants()[i].getId(),
+            );
+
+            const libraryPendencies = await libraryPendenciesQuantity(
+                String(student?.getRA()),
+            );
+
+            if (libraryPendencies >= 2) {
+                participants.push(academicGroup.getParticipants()[i]);
+            }
+        }
+
+        return participants;
+    }
+
     async findMany(page = '1') {
         const groupsFound = await academicGroupRepository.findMany(
             parseInt(page),
