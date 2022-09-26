@@ -143,6 +143,12 @@ export class AcademicGroupService {
             throw new NotFoundException('Student not found :(');
         }
 
+        student.setLibraryPendencies(
+            (await libraryPendenciesQuantity(String(student.getRA()))) > 0
+                ? false
+                : true,
+        );
+
         if (
             !academicGroup.addStudent(
                 student,
@@ -295,7 +301,7 @@ export class AcademicGroupService {
             );
 
             const libraryPendencies = await libraryPendenciesQuantity(
-                String(student?.getRA()),
+                String(student?.getCPF()),
             );
 
             if (libraryPendencies >= 2) {
