@@ -116,9 +116,13 @@ export class AcademicGroup {
     }
 
     //O parâmetro disciplinesNumber irá mudar. Será necessário fazer uma requisição para os outros sistemas
-    public addStudent(student: Student, disciplinesNumber: number): boolean {
+    public addStudent(
+        student: Student,
+        disciplinesNumber: number,
+        pendenciesNumber: boolean,
+    ): boolean {
         if (
-            student.getLibraryPendencies() ||
+            !pendenciesNumber ||
             disciplinesNumber < 3 ||
             !this.currentState.isActive()
         ) {
@@ -132,6 +136,7 @@ export class AcademicGroup {
     public changeResponsable(
         actual_user_id: string,
         new_user: User,
+        pendenciesNumber?: boolean,
         disciplinesNumber?: number,
     ): number {
         console.log('test');
@@ -142,9 +147,12 @@ export class AcademicGroup {
         if (this.getResponsible().getId() !== actual_user_id) {
             return 3;
         }
-        console.log('testee');
         if (disciplinesNumber !== undefined && disciplinesNumber < 3) {
             return 4;
+        }
+
+        if (pendenciesNumber !== undefined && !pendenciesNumber) {
+            return 5;
         }
 
         this.setResponsible(new_user);

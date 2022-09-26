@@ -102,16 +102,26 @@ export class AcademicGroupService {
         }
 
         let changedCode = 1;
+
+        newResponsible.setLibraryPendencies(
+            (await libraryPendenciesQuantity(String(newResponsible.getCPF()))) >
+                0
+                ? false
+                : true,
+        );
+
         if (isStudent) {
             changedCode = academicGroup.changeResponsable(
                 logged_id,
                 newResponsible,
+                newResponsible.getLibraryPendencies(),
                 await subjectsQuantity(String(student?.getRA())),
             );
         } else {
             changedCode = academicGroup.changeResponsable(
                 logged_id,
                 newResponsible,
+                newResponsible.getLibraryPendencies(),
             );
         }
 
@@ -121,6 +131,8 @@ export class AcademicGroupService {
             throw new ForbiddenException('Não é o responsável');
         } else if (changedCode == 4) {
             throw new ForbiddenException('Não está inscrito em disciplinas');
+        } else if (changedCode == 5) {
+            throw new ForbiddenException('Tem pendências com a biblioteca');
         }
 
         await academicGroupRepository.save(academicGroup);
@@ -153,6 +165,7 @@ export class AcademicGroupService {
             !academicGroup.addStudent(
                 student,
                 await subjectsQuantity(String(student.getRA())),
+                student.getLibraryPendencies(),
             )
         )
             throw new BadRequestException('Student has issues');
