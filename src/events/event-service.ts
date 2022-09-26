@@ -1,7 +1,10 @@
 import { AcademicGroupRepository } from '../academic-groups/academic-group-repository';
 import { NotFoundException } from '../errors/not-found';
 import { StudentRepository } from '../students/student-repository';
+import { Student } from '../students/student.entity';
 import { EventRepository } from './event-repository';
+import { libraryPendenciesQuantity } from '../utils/getPendencies';
+import { subjectsQuantity } from '../utils/getSubjects';
 
 const eventRepository = new EventRepository();
 const academicGroupRepository = new AcademicGroupRepository();
@@ -35,6 +38,29 @@ export class EventService {
 
             if (!studentOrganizers) {
                 throw new NotFoundException('Student not found :(');
+            }
+
+            studentOrganizers.setLibraryPendencies(
+                (await libraryPendenciesQuantity(
+                    String(studentOrganizers.getRA()),
+                )) > 0
+                    ? false
+                    : true,
+            );
+
+            if (!studentOrganizers.getLibraryPendencies()) {
+                throw new NotFoundException(
+                    'Student has library pendencies :(',
+                );
+            }
+
+            const disciplinesNumber = await subjectsQuantity(
+                String(studentOrganizers.getRA()),
+            );
+            if (disciplinesNumber >= 3) {
+                throw new NotFoundException(
+                    'Student is not in sufficient disciplines :(',
+                );
             }
         }
 
