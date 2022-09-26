@@ -144,7 +144,7 @@ export class AcademicGroupService {
         }
 
         student.setLibraryPendencies(
-            (await libraryPendenciesQuantity(String(student.getRA()))) > 0
+            (await libraryPendenciesQuantity(String(student.getCPF()))) > 0
                 ? false
                 : true,
         );
