@@ -96,6 +96,9 @@ export class EventRepository {
         academicGroupsOrganizersId: string[],
         academicGroupsGuestsId: string[],
     ) {
+        const splitedStartDate = startDate?.split('/');
+        const splitedEndDate = startDate?.split('/');
+
         const usersObject = organizersIds.map((userId: string) => {
             return { userId: userId };
         });
@@ -119,8 +122,16 @@ export class EventRepository {
         const createdEvent = await prismaClient.event.create({
             data: {
                 name: name,
-                startDate: new Date(),
-                endDate: new Date(),
+                startDate: new Date(
+                    +splitedStartDate[2],
+                    +splitedStartDate[1] - 1,
+                    +splitedStartDate[0],
+                ),
+                endDate: new Date(
+                    +splitedEndDate[2],
+                    +splitedEndDate[1] - 1,
+                    +splitedEndDate[0],
+                ),
                 status: 'scheduled',
                 addressId: local,
                 organizersUsers: {
