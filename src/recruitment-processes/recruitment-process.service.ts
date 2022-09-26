@@ -1,19 +1,17 @@
 import { isUUID } from 'class-validator';
-import { Request, Response } from 'express';
+import { BadRequestException } from '../errors/bad-request';
 import { RecruitmentProcessRepository } from './recruitment-process-repository';
 
 const recruitmentProcessRepository = new RecruitmentProcessRepository();
 
 export class RecruitmentProcessService {
-    async create(request: Request, response: Response) {
-        const {
-            academicGroupId,
-            startDate,
-            endDate,
-            opportunitiesNumber,
-            subscribesNumber,
-        } = request.body;
-
+    async create(
+        academicGroupId: string,
+        startDate: string,
+        endDate: string,
+        opportunitiesNumber: number,
+        subscribesNumber: number,
+    ) {
         const createdRecruitmentProcess =
             await recruitmentProcessRepository.create(
                 academicGroupId,
@@ -23,18 +21,18 @@ export class RecruitmentProcessService {
                 subscribesNumber,
             );
 
-        return response.status(201).send(createdRecruitmentProcess);
+        return createdRecruitmentProcess;
     }
 
-    async findById(request: Request, response: Response) {
-        if (!request?.query?.id || !isUUID(request?.query?.id)) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async findById(id: string) {
+        if (!id || !isUUID(id)) {
+            throw new BadRequestException('Requisição mal formulada');
         }
 
         const recruitmentProcess = await recruitmentProcessRepository.findById(
-            request.query.id as string,
+            id,
         );
 
-        return response.status(201).send(recruitmentProcess);
+        return recruitmentProcess;
     }
 }

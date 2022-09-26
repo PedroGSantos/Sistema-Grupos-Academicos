@@ -1,37 +1,33 @@
 import { isUUID } from 'class-validator';
-import { Request, Response } from 'express';
+import { NotFoundException } from '../errors/not-found';
 import { StudentRepository } from './student-repository';
 
 const studentRepository = new StudentRepository();
 
 export class StudentService {
-    async findById(request: Request, response: Response) {
-        if (!request?.params?.id || !isUUID(request?.params?.id)) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async findById(id: string) {
+        if (!id || !isUUID(id)) {
+            throw new NotFoundException('Requisição mal formulada');
         }
 
-        const studentFound = await studentRepository.findById(
-            request.params.id as string,
-        );
+        const studentFound = await studentRepository.findById(id);
 
         if (!studentFound) {
-            return response.status(404).json({ error: 'Student not found :(' });
+            throw new NotFoundException('Student not found :(');
         }
 
-        return response.status(200).send(studentFound);
+        return studentFound;
     }
 
-    async findStudentAcademicGroups(request: Request, response: Response) {
-        if (!request?.params?.ra) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async findStudentAcademicGroups(ra: number) {
+        if (!ra) {
+            throw new NotFoundException('Requisição mal formulada');
         }
 
-        const studentFound = await studentRepository.findByRa(
-            parseInt(request.params.ra),
-        );
+        const studentFound = await studentRepository.findByRa(ra);
 
         if (!studentFound) {
-            return response.status(404).json({ error: 'Student not found :(' });
+            throw new NotFoundException('Student not found :(');
         }
 
         const academicGroups =
@@ -40,25 +36,18 @@ export class StudentService {
                 true,
             );
 
-        return response
-            .status(200)
-            .json({ data: academicGroups, count: academicGroups.length });
+        return { data: academicGroups, count: academicGroups.length };
     }
 
-    async findStudentAcademicGroupsHistory(
-        request: Request,
-        response: Response,
-    ) {
-        if (!request?.params?.ra) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async findStudentAcademicGroupsHistory(ra: number) {
+        if (!ra) {
+            throw new NotFoundException('Requisição mal formulada');
         }
 
-        const studentFound = await studentRepository.findByRa(
-            parseInt(request.params.ra),
-        );
+        const studentFound = await studentRepository.findByRa(ra);
 
         if (!studentFound) {
-            return response.status(404).json({ error: 'Student not found :(' });
+            throw new NotFoundException('Student not found :(');
         }
 
         const academicGroups =
@@ -66,25 +55,24 @@ export class StudentService {
                 studentFound.getId(),
             );
 
-        return response
-            .status(200)
-            .json({ data: academicGroups, count: academicGroups.length });
+        return { data: academicGroups, count: academicGroups.length };
     }
 
-    async findStudentsInDeactivatedAcademicGroups(
-        request: Request,
-        response: Response,
-    ) {
+    async findStudentsInDeactivatedAcademicGroups() {
         const studentsFound =
             await studentRepository.findStudentsInDeactivatedGroups();
 
-        return response.status(200).json(studentsFound);
+        return studentsFound;
     }
 
-    async create(request: Request, response: Response) {
-        const { name, email, cpf, birthDate, password, department_id } =
-            request.body;
-
+    async create(
+        name: string,
+        email: string,
+        cpf: string,
+        birthDate: string,
+        password: string,
+        department_id: string,
+    ) {
         const createdStudent = await studentRepository.create(
             name,
             email,
@@ -94,6 +82,6 @@ export class StudentService {
             department_id,
         );
 
-        return response.status(201).send(createdStudent);
+        return createdStudent;
     }
 }

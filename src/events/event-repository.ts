@@ -1,4 +1,4 @@
-import { EventStatesEnum, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Event, IEventConstructor } from './event.entity';
 
 const prismaClient = new PrismaClient();
@@ -88,13 +88,13 @@ export class EventRepository {
 
     async create(
         name: string,
-        startDate: Date,
-        endDate: Date,
-        organizersIds: [],
+        startDate: string,
+        endDate: string,
+        organizersIds: string[],
         local: string,
-        guestsIds: [],
-        academicGroupsOrganizersId: [],
-        academicGroupsGuestsId: [],
+        guestsIds: string[],
+        academicGroupsOrganizersId: string[],
+        academicGroupsGuestsId: string[],
     ) {
         const usersObject = organizersIds.map((userId: string) => {
             return { userId: userId };
@@ -145,6 +145,8 @@ export class EventRepository {
                 },
             },
         });
+
+        return createdEvent;
     }
 
     async update(
@@ -152,7 +154,7 @@ export class EventRepository {
         startDate: string,
         endDate: string,
         address_id: string,
-        status: EventStatesEnum,
+        status: string,
     ) {
         const splitedStartDate = startDate?.split('/');
         const splitedEndDate = endDate?.split('/');

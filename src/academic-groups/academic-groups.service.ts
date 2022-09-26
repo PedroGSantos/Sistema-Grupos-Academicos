@@ -1,14 +1,13 @@
 import { isUUID } from 'class-validator';
-import { Request, Response } from 'express';
 import { BadGatewayException } from '../errors/bad-gateway';
 import { BadRequestException } from '../errors/bad-request';
 import { ForbiddenException } from '../errors/forbidden';
 import { NotFoundException } from '../errors/not-found';
 import { EventRepository } from '../events/event-repository';
-import { ProfessorRepository } from '../professors/professor-repository';
-import { StudentRepository } from '../students/student-repository';
 import { Student } from '../students/student.entity';
 import { subjectsQuantity } from '../utils/getSubjects';
+import { StudentRepository } from '../students/student-repository';
+import { ProfessorRepository } from '../professors/professor-repository';
 import { AcademicGroupRepository } from './academic-group-repository';
 
 const academicGroupRepository = new AcademicGroupRepository();
@@ -53,7 +52,7 @@ export class AcademicGroupService {
         return createdGroup;
     }
 
-    async deactivate(id: string, user_id: string) {
+    async deactivate(id: string, logged_id: string) {
         if (!id || !isUUID(id)) {
             throw new BadRequestException('Invalid id :(');
         }
@@ -64,7 +63,7 @@ export class AcademicGroupService {
             throw new NotFoundException('Academic Group not found :(');
         }
 
-        const disabledCode = groupFound.disableAcademicGroup(user_id);
+        const disabledCode = groupFound.disableAcademicGroup(logged_id);
 
         if (disabledCode == 2) {
             throw new BadRequestException('Grupo já desativado');
@@ -77,13 +76,15 @@ export class AcademicGroupService {
         return true;
     }
 
-    async changeResponsible(request: Request, response: Response) {
-        const { academicGroupId, newResponsibleId } = request.body;
-
+    async changeResponsible(
+        academicGroupId: string,
+        newResponsibleId: string,
+        logged_id: string,
+    ) {
         const academicGroup = await academicGroupRepository.findById(
             academicGroupId,
         );
-        console.log(newResponsibleId);
+
         const student = await studentRepository.findById(newResponsibleId);
 
         const professor = await professorRepository.findById(newResponsibleId);
@@ -92,60 +93,53 @@ export class AcademicGroupService {
         const isStudent = newResponsible instanceof Student;
 
         if (!newResponsible) {
-            return response.status(404).json({ error: 'User not found :(' });
+            throw new NotFoundException('User not found :(');
         }
 
         if (!academicGroup) {
-            return response
-                .status(404)
-                .json({ error: 'Academic Group not found :(' });
+            throw new NotFoundException('Academic Group not found :(');
         }
 
         let changedCode = 1;
         if (isStudent) {
             changedCode = academicGroup.changeResponsable(
-                request.body.user_id,
+                logged_id,
                 newResponsible,
                 await subjectsQuantity(String(student?.getRA())),
             );
         } else {
             changedCode = academicGroup.changeResponsable(
-                request.body.user_id,
+                logged_id,
                 newResponsible,
             );
         }
+
         if (changedCode == 2) {
-            return response.status(400).json({ error: 'Grupo já desativado' });
+            throw new BadRequestException('Grupo já desativado');
         } else if (changedCode == 3) {
-            return response.status(403).json({ error: 'Não é o responsável' });
+            throw new ForbiddenException('Não é o responsável');
         } else if (changedCode == 4) {
-            return response
-                .status(403)
-                .json({ error: 'Não está inscrito em disciplinas' });
+            throw new ForbiddenException('Não está inscrito em disciplinas');
         }
 
         await academicGroupRepository.save(academicGroup);
 
-        return response.status(204).send();
+        return true;
     }
 
-    async addStudent(request: Request, response: Response) {
-        const { academicGroupId, studentId } = request.body;
-
+    async addStudent(academicGroupId: string, studentId: string) {
         const academicGroup = await academicGroupRepository.findById(
             academicGroupId,
         );
 
         if (!academicGroup) {
-            return response
-                .status(404)
-                .json({ error: 'Academic Group not found :(' });
+            throw new NotFoundException('Academic Group not found :(');
         }
 
         const student = await studentRepository.findById(studentId);
 
         if (!student) {
-            return response.status(404).json({ error: 'Student not found :(' });
+            throw new NotFoundException('Student not found :(');
         }
 
         if (
@@ -154,127 +148,108 @@ export class AcademicGroupService {
                 await subjectsQuantity(String(student.getRA())),
             )
         )
-            return response.status(400).json({ error: 'Student has issues' });
+            throw new BadRequestException('Student has issues');
 
         await academicGroupRepository.saveStudent(academicGroup, student);
-        return response.status(204).send();
+
+        return true;
     }
 
-    async removeStudent(request: Request, response: Response) {
-        const { academicGroupId, studentId } = request.body;
-
+    async removeStudent(
+        academicGroupId: string,
+        studentId: string,
+        logged_id: string,
+    ) {
         const academicGroup = await academicGroupRepository.findById(
             academicGroupId,
         );
 
         if (!academicGroup) {
-            return response
-                .status(404)
-                .json({ error: 'Academic Group not found :(' });
+            throw new NotFoundException('Academic Group not found :(');
         }
 
         const student = await studentRepository.findById(studentId);
-        console.log(studentId);
-        console.log(student);
 
         if (!student) {
-            return response.status(404).json({ error: 'Student not found :(' });
+            throw new NotFoundException('Student not found :(');
         }
 
-        const removedCode = academicGroup.removeStudent(
-            request.body.user_id,
-            student,
-        );
+        const removedCode = academicGroup.removeStudent(logged_id, student);
+
         if (removedCode == 2) {
-            return response
-                .status(400)
-                .json({ error: 'Grupo está desativado' });
+            throw new BadRequestException('Grupo está desativado');
         } else if (removedCode == 3) {
-            return response.status(403).json({ error: 'Não é o responsável' });
+            throw new ForbiddenException('Não é o responsável');
         }
 
         await academicGroupRepository.removeStudent(academicGroup, student);
-        return response.status(204).send();
+
+        return true;
     }
 
-    async findInvitedEventsById(request: Request, response: Response) {
-        if (!request?.query?.id || !isUUID(request?.query?.id)) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async findInvitedEventsById(id: string) {
+        if (!id || !isUUID(id)) {
+            throw new BadRequestException('Requisição mal formulada');
         }
 
-        const events = await eventRepository.findByInvitedAcademicGroupId(
-            request.query.id as string,
-        );
+        const events = await eventRepository.findByInvitedAcademicGroupId(id);
 
-        return response.status(200).send(events);
+        return events;
     }
 
-    async findManyByName(request: Request, response: Response) {
-        if (!request?.query?.name) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async findManyByName(name: string) {
+        if (!name) {
+            throw new BadRequestException('Requisição mal formulada');
         }
 
-        const groupsFound = await academicGroupRepository.findByName(
-            request.query.name as string,
-        );
+        const groupsFound = await academicGroupRepository.findByName(name);
 
-        return response.status(200).send(groupsFound);
+        return groupsFound;
     }
 
-    async findParticipantsById(request: Request, response: Response) {
-        if (!request?.query?.id || !isUUID(request?.query?.id)) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async findParticipantsById(academicGroupId: string) {
+        if (!academicGroupId || !isUUID(academicGroupId)) {
+            throw new BadRequestException('Requisição mal formulada');
         }
-        const academicGroupId = request?.query?.id as string;
 
         const academicGroup = await academicGroupRepository.findById(
             academicGroupId,
         );
 
         if (!academicGroup) {
-            return response
-                .status(404)
-                .json({ error: 'Academic Group not found :(' });
+            throw new NotFoundException('Academic Group not found :(');
         }
 
         const participants = await academicGroupRepository.findParticipantsById(
-            request.query.id as string,
+            academicGroupId,
         );
 
-        return response.status(200).send(participants);
+        return participants;
     }
 
-    async findOrganizedEventsById(request: Request, response: Response) {
-        if (!request?.query?.id || !isUUID(request?.query?.id)) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async findOrganizedEventsById(id: string) {
+        if (!id || !isUUID(id)) {
+            throw new BadRequestException('Requisição mal formulada');
         }
 
-        const events = await eventRepository.findByOrganizerAcademicGroupId(
-            request.query.id as string,
-        );
+        const events = await eventRepository.findByOrganizerAcademicGroupId(id);
 
-        return response.status(200).send(events);
+        return events;
     }
 
-    async findParticipantsWithSubjects(request: Request, response: Response) {
-        if (!request?.query?.id || !isUUID(request?.query?.id)) {
-            return response.status(400).json({ error: 'Pedido ruim fi' });
+    async findParticipantsWithSubjects(id: string) {
+        if (!id || !isUUID(id)) {
+            throw new BadRequestException('Requisição mal formulada');
         }
 
-        const academicGroup = await academicGroupRepository.findById(
-            request.query.id as string,
-        );
+        const academicGroup = await academicGroupRepository.findById(id);
 
         if (!academicGroup) {
-            return response
-                .status(404)
-                .json({ error: 'Academic Group not found :(' });
+            throw new NotFoundException('Academic Group not found :(');
         }
 
         if (!academicGroup.getAcademicGroupState().isActive()) {
-            return response
-                .status(404)
-                .json({ error: 'Academic Group is not active :(' });
+            throw new BadRequestException('Academic Group is not active :(');
         }
 
         const participants = [];
@@ -294,13 +269,13 @@ export class AcademicGroupService {
             }
         }
 
-        return response.status(200).send(participants);
+        return participants;
     }
-    async findMany(request: Request, response: Response) {
+    async findMany(page = '1') {
         const groupsFound = await academicGroupRepository.findMany(
-            parseInt(request?.query?.page?.toString() ?? '1'),
+            parseInt(page),
         );
 
-        return response.status(200).send(groupsFound);
+        return groupsFound;
     }
 }

@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { AcademicGroupRepository } from '../academic-groups/academic-group-repository';
+import { NotFoundException } from '../errors/not-found';
 import { StudentRepository } from '../students/student-repository';
 import { EventRepository } from './event-repository';
 
@@ -8,27 +8,23 @@ const academicGroupRepository = new AcademicGroupRepository();
 const studentRepository = new StudentRepository();
 
 export class EventService {
-    async create(request: Request, response: Response) {
-        const {
-            name,
-            startDate,
-            endDate,
-            organizersIds,
-            addressId,
-            guestsIds,
-            academicGroupsOrganizersIds,
-            academicGroupsGuestsIds,
-        } = request.body;
-
+    async create(
+        name: string,
+        startDate: string,
+        endDate: string,
+        organizersIds: string[],
+        addressId: string,
+        guestsIds: string[],
+        academicGroupsOrganizersIds: string[],
+        academicGroupsGuestsIds: string[],
+    ) {
         for (let i = 0; i < academicGroupsOrganizersIds.length; i++) {
             const academicGroup = await academicGroupRepository.findById(
                 academicGroupsOrganizersIds[i],
             );
 
             if (!academicGroup) {
-                return response
-                    .status(404)
-                    .json({ error: 'Academic Group not found :(' });
+                throw new NotFoundException('Academic Group not found :(');
             }
         }
 
@@ -38,12 +34,9 @@ export class EventService {
             );
 
             if (!studentOrganizers) {
-                return response
-                    .status(404)
-                    .json({ error: 'Student not found :(' });
+                throw new NotFoundException('Student not found :(');
             }
         }
-        console.log(academicGroupsGuestsIds);
 
         const createdGroup = await eventRepository.create(
             name,
@@ -56,13 +49,16 @@ export class EventService {
             academicGroupsGuestsIds,
         );
 
-        return response.status(201).send(createdGroup);
+        return createdGroup;
     }
 
-    async update(request: Request, response: Response) {
-        const { event_id, startDate, endDate, addressId, status } =
-            request.body;
-
+    async update(
+        event_id: string,
+        startDate: string,
+        endDate: string,
+        addressId: string,
+        status: string,
+    ) {
         const updatedGroup = await eventRepository.update(
             event_id,
             startDate,
@@ -71,6 +67,6 @@ export class EventService {
             status,
         );
 
-        return response.status(201).send(updatedGroup);
+        return updatedGroup;
     }
 }
